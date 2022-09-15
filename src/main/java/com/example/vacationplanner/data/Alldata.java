@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Alldata {
 
+
     public List <String> data() {
 
         List data = new ArrayList();
