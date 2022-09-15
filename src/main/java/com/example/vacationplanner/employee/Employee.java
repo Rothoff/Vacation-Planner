@@ -1,4 +1,4 @@
-package com.example.vacationplanner.Employee;
+package com.example.vacationplanner.employee;
 
 import javax.persistence.*;
 
