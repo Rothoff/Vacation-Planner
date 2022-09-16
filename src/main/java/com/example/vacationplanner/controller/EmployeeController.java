@@ -1,5 +1,7 @@
-package com.example.vacationplanner.employee;
+package com.example.vacationplanner.controller;
 
+import com.example.vacationplanner.entity.Employee;
+import com.example.vacationplanner.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
