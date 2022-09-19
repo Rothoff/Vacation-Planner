@@ -59,4 +59,18 @@ public class DataToDatabase {
         }
         System.out.println(weekNumber.length + " rows has been inserted into week-table");
     }
+
+    public void deleteTableData (String tableName, JdbcTemplate jdbcTemplate){
+        String truncate = "TRUNCATE TABLE " + tableName + " RESTART IDENTITY";
+        jdbcTemplate.update(truncate);
+    }
+    public void resetAllTables(JdbcTemplate jdbcTemplate){
+        String truncateVacation = "TRUNCATE TABLE vacation RESTART IDENTITY";
+        String truncateWeeks = "TRUNCATE TABLE weeks RESTART IDENTITY";
+        String truncateEmployee = "TRUNCATE TABLE employee RESTART IDENTITY";
+        String truncateTeam = "TRUNCATE TABLE team RESTART IDENTITY";
+        jdbcTemplate.update(truncateVacation, truncateWeeks,truncateEmployee,truncateTeam);
+    }
+
+
 }
