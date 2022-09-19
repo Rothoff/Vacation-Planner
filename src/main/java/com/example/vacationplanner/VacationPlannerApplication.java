@@ -33,6 +33,7 @@ public class VacationPlannerApplication implements CommandLineRunner {
         dbc.weekDataToDatabase(jdbcTemplate, page);
         dbc.TeamDataToDatabase(jdbcTemplate,page);
         dbc.employeeDataToDatabase(jdbcTemplate,page);
+        dbc.vacactionDataToDataBase(jdbcTemplate,page);
 
     }
 }

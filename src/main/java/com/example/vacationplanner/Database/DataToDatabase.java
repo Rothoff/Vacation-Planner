@@ -2,10 +2,12 @@ package com.example.vacationplanner.Database;
 
 import org.jsoup.Jsoup;
 import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.HashSet;
+
 public class DataToDatabase {
 
-    public void collectAllData(){
+    public void collectAllData() {
 
     }
 
@@ -28,26 +30,29 @@ public class DataToDatabase {
     }
 
     public void employeeDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
-        String[] firstName = new String[52];
-        String[] lastName = new String[52];
-        String[] teamName = new String[52];
+        String firstName;
+        String lastName;
+        String teamName;
+        int nrOfRows = 0;
         for (int i = 2; i < 52; i++) {
-            teamName[i] = Jsoup.parse(page).select("tr").get(i)
+            teamName = Jsoup.parse(page).select("tr").get(i)
                     .select("th").get(0).text();
             String fullname = Jsoup.parse(page).select("tr").get(i)
                     .select("th").get(1).text();
-            firstName[i] = fullname.substring(0, fullname.indexOf(" ") + 1);
-            lastName[i] = fullname.substring(fullname.indexOf(" ") + 1);
+
+            firstName = fullname.substring(0, fullname.indexOf(" ") + 1);
+            lastName = fullname.substring(fullname.indexOf(" ") + 1);
             if (fullname.isEmpty()) {
                 continue;
             }
-            String resultID = jdbcTemplate.queryForObject("SELECT id FROM team WHERE team_name = '" + teamName[i] + "'"
+            String resultID = jdbcTemplate.queryForObject("SELECT id FROM team WHERE team_name = '" + teamName + "'"
                     , String.class);
-            String namesSql = "Insert INTO employee (first_name, last_name, team_id) VALUES ('" + firstName[i] + "'," +
-                    "'" + lastName[i] + "','" + resultID + "')";
+            String namesSql = "Insert INTO employee (first_name, last_name, team_id) VALUES ('" + firstName + "'," +
+                    "'" + lastName + "','" + resultID + "')";
             jdbcTemplate.execute(namesSql);
+            nrOfRows++;
         }
-        System.out.println(firstName.length + " rows has been inserted into employee-table");
+        System.out.println(nrOfRows + " rows has been inserted into employee-table");
     }
 
     public void weekDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
@@ -64,11 +69,59 @@ public class DataToDatabase {
         System.out.println(weekNumber.length + " rows has been inserted into week-table");
     }
 
-    public void deleteTableData (String tableName, JdbcTemplate jdbcTemplate){
+    public void vacactionDataToDataBase(JdbcTemplate jdbcTemplate, String page) {
+        String firstName;
+        String lastName;
+        String vacationOrNah;
+        int nrOfRows = 0;
+        int[] weekNumber = new int[200];
+
+
+        for (int row = 2; row < 52; row++) {
+            String fullName = Jsoup.parse(page).select("tr").get(row)
+                    .select("th").get(1).text();
+
+            firstName = fullName.substring(0, fullName.indexOf(" ") + 1);
+            lastName = fullName.substring(fullName.indexOf(" ") + 1);
+
+            for (int column = 0; column < 21; column++) {
+                vacationOrNah = Jsoup.parse(page).select("tr").get(row)
+                        .select("td").get(column).text();
+                String weeks = Jsoup.parse(page).select("tr").get(0)
+                        .select("td").get(column).text().replaceAll("week ","");
+
+                String number = weeks.substring(weeks.indexOf(" ") + 1);
+                weekNumber[row] = Integer.parseInt(number);
+                if (!vacationOrNah.isEmpty()) {
+                    String employeeID = jdbcTemplate.queryForObject("SELECT id FROM employee WHERE first_name" +
+                                    " = '" + firstName + "'"
+                                    + " AND last_name = '" + lastName + "'"
+                            , String.class);
+
+                    String weekID = jdbcTemplate.queryForObject("SELECT id FROM weeks WHERE week_number" +
+                                    " = '" + weekNumber[row] + "'"
+                            , String.class);
+
+                    String namesSql = "Insert INTO vacation (employee_id, week_id, text) VALUES ('" + employeeID + "'," +
+                            "'" + weekID + "','" + vacationOrNah + "')";
+                    jdbcTemplate.execute(namesSql);
+
+                } else {
+                    continue;
+                }
+            }
+            nrOfRows++;
+        }
+        System.out.println(nrOfRows + " has been inserted into vacation-table");
+
+    }
+
+    public void deleteTableData(String tableName, JdbcTemplate jdbcTemplate) {
         String truncate = "TRUNCATE TABLE " + tableName + " RESTART IDENTITY";
         jdbcTemplate.update(truncate);
     }
-    public void resetAllTables(JdbcTemplate jdbcTemplate){
+
+    public void resetAllTables(JdbcTemplate jdbcTemplate) {
         String truncate = "TRUNCATE TABLE vacation, weeks, employee, team RESTART IDENTITY";
         jdbcTemplate.update(truncate);
 
