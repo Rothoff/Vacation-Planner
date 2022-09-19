@@ -5,6 +5,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.HashSet;
 public class DataToDatabase {
 
+    public void collectAllData(){
+
+    }
+
     public void TeamDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
         HashSet<String> uniqueTeams = new HashSet<>();
         for (int i = 2; i < 52; i++) {
@@ -65,11 +69,10 @@ public class DataToDatabase {
         jdbcTemplate.update(truncate);
     }
     public void resetAllTables(JdbcTemplate jdbcTemplate){
-        String truncateVacation = "TRUNCATE TABLE vacation RESTART IDENTITY";
-        String truncateWeeks = "TRUNCATE TABLE weeks RESTART IDENTITY";
-        String truncateEmployee = "TRUNCATE TABLE employee RESTART IDENTITY";
-        String truncateTeam = "TRUNCATE TABLE team RESTART IDENTITY";
-        jdbcTemplate.update(truncateVacation, truncateWeeks,truncateEmployee,truncateTeam);
+        String truncate = "TRUNCATE TABLE vacation, weeks, employee, team RESTART IDENTITY";
+        jdbcTemplate.update(truncate);
+
+        System.out.println("Reset tables - done");
     }
 
 
