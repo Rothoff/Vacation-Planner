@@ -1,24 +1,14 @@
 package WebScraper;
 
-import com.example.vacationplanner.data.Alldata;
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomNode;
-import com.gargoylesoftware.htmlunit.html.DomNodeList;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.NTCredentials;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-
-import static org.jsoup.nodes.Document.OutputSettings.Syntax.html;
+import java.util.*;
 
 public class TestingWs {
 
@@ -50,9 +40,47 @@ public class TestingWs {
         //bodies are stored. You'll find "<div class="md">" before each message.
         Elements messages = Jsoup.parse(page).select("div.md");
 
-        for(int i = 0; i<64; i++){
-            System.out.println( Jsoup.parse(page).select("tr").get(i).text());
+
+
+
+      /*  HashSet<String> uniqueTeams = new HashSet<>();
+        for (int i = 2; i < 52; i++) {
+            String team =Jsoup.parse(page).select("tr").get(i)
+                    .select("th").get(0).text();
+            if (team.isEmpty()){
+                continue;
+            }
+            uniqueTeams.add(team);
         }
+        String[] teamss = uniqueTeams.toArray(new String[uniqueTeams.size()]);
+        for (int i = 0; i < uniqueTeams.size(); i++) {
+
+            System.out.println(teamss[i]);
+        }
+
+       /* String[] firstName = new String[52];
+        String[] lastName = new String[52];
+        for (int i = 2; i < 52; i++) {
+            String fullname = Jsoup.parse(page).select("tr").get(i)
+                    .select("th").get(1).text();
+            firstName[i] = fullname.substring(0, fullname.indexOf(" ")+1);
+            lastName[i] = fullname.substring(fullname.indexOf(" ") + 1);
+            if (fullname.isEmpty()){
+                continue;
+            }
+            System.out.println(lastName);
+        }*/
+
+       /* int[] weekNumber = new int[21];
+        for (int i = 0; i < 21; i++) {
+           String weeks = Jsoup.parse(page).select("tr").get(0)
+                    .select("td").get(i).text();
+           String number = weeks.substring(weeks.indexOf(" ") +1);
+           weekNumber[i] = Integer.parseInt(number);
+
+            System.out.println(weekNumber[i]);
+
+        } */
 
 
 

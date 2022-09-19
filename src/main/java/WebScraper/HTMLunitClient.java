@@ -22,7 +22,7 @@ public class HTMLunitClient {
     private final String password;
 
     //Our constructor. Sets our username and password and does some client config.
-    HTMLunitClient(String username, String password) {
+    public HTMLunitClient(String username, String password) {
         this.username = username;
         this.password = password;
 

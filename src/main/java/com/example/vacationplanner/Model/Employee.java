@@ -1,4 +1,4 @@
-package com.example.vacationplanner.entity;
+package com.example.vacationplanner.Model;
 
 import javax.persistence.*;
 
