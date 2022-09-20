@@ -1,7 +1,7 @@
 package com.example.vacationplanner;
 
-import WebScraper.HTMLunitClient;
-import com.example.vacationplanner.Database.DataToDatabase;
+import webScraper.HTMLunitClient;
+import com.example.vacationplanner.database.DataToDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -34,6 +34,7 @@ public class VacationPlannerApplication implements CommandLineRunner {
         dbc.TeamDataToDatabase(jdbcTemplate,page);
         dbc.employeeDataToDatabase(jdbcTemplate,page);
         dbc.vacactionDataToDataBase(jdbcTemplate,page);
+
 
     }
 }

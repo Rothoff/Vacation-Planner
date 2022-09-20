@@ -1,14 +1,12 @@
-package WebScraper;
+package webScraper;
 
 import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
 
 public class TestingWs {
 

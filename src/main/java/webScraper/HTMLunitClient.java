@@ -1,4 +1,4 @@
-package WebScraper;
+package webScraper;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;

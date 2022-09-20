@@ -1,9 +1,9 @@
 package com.example.vacationplanner.controller;
 
 import com.example.vacationplanner.model.Employee;
+import com.example.vacationplanner.model.Week;
 import com.example.vacationplanner.repository.EmployeeRepository;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.example.vacationplanner.repository.WeekRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-public class EmployeeController {
-
+public class WeekController {
     @Autowired
-    private EmployeeRepository employeeRepo;
+    private WeekRepository weekRepo;
 
-
-    @GetMapping("/employees")
-    public List<Employee> listAll(Model model){
-        List<Employee> listEmployees = employeeRepo.findAll();
-        model.addAttribute("listEmployees", listEmployees);
-
-        return listEmployees;
+    @GetMapping("/weeks")
+    public List<Week> listAll(Model model) {
+        List<Week> listweeks = weekRepo.findAll();
+        model.addAttribute("listEmployees", listweeks);
+        return listweeks;
     }
 }

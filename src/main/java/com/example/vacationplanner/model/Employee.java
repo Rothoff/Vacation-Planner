@@ -1,4 +1,4 @@
-package com.example.vacationplanner.Model;
+package com.example.vacationplanner.model;
 
 import javax.persistence.*;
 
@@ -11,6 +11,9 @@ public class Employee {
 
     private String first_name;
     private String last_name;
+
+    private int team_id;
+
 
     public Integer getId() {
         return id;

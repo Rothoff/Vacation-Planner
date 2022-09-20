@@ -1,9 +1,8 @@
-package com.example.vacationplanner.Model;
+package com.example.vacationplanner.model;
 
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Data

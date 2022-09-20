@@ -1,4 +1,4 @@
-package com.example.vacationplanner.Database;
+package com.example.vacationplanner.database;
 
 import org.jsoup.Jsoup;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,37 +7,40 @@ import java.util.HashSet;
 
 public class DataToDatabase {
 
-    public void collectAllData() {
-
-    }
+    private String firstName;
+    private String lastName;
+    private String fullname;
+    private String tdText;
+    private String teamName;
+    private String weeks;
+    private String numberString;
+    private int weekNumber;
+    private int nrOfRows = 0;
 
     public void TeamDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
         HashSet<String> uniqueTeams = new HashSet<>();
         for (int i = 2; i < 52; i++) {
-            String team = Jsoup.parse(page).select("tr").get(i)
+            teamName = Jsoup.parse(page).select("tr").get(i)
                     .select("th").get(0).text();
-            if (team.isEmpty()) {
+            if (teamName.isEmpty()) {
                 continue;
             }
-            uniqueTeams.add(team);
+            uniqueTeams.add(teamName);
         }
         String[] teams = uniqueTeams.toArray(new String[uniqueTeams.size()]);
         for (int i = 0; i < uniqueTeams.size(); i++) {
             String teamSql = "Insert INTO team (team_name) VALUES ('" + teams[i] + "')";
             jdbcTemplate.update(teamSql);
         }
-        System.out.println(teams.length + " rows has been inserted into team-table");
+        System.out.println("rows has been inserted into team-table");
     }
 
     public void employeeDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
-        String firstName;
-        String lastName;
-        String teamName;
         int nrOfRows = 0;
-        for (int i = 2; i < 52; i++) {
+        for (int i = 2; i < 50; i++) {
             teamName = Jsoup.parse(page).select("tr").get(i)
                     .select("th").get(0).text();
-            String fullname = Jsoup.parse(page).select("tr").get(i)
+            fullname = Jsoup.parse(page).select("tr").get(i)
                     .select("th").get(1).text();
 
             firstName = fullname.substring(0, fullname.indexOf(" ") + 1);
@@ -52,31 +55,23 @@ public class DataToDatabase {
             jdbcTemplate.execute(namesSql);
             nrOfRows++;
         }
-        System.out.println(nrOfRows + " rows has been inserted into employee-table");
+        System.out.println("rows has been inserted into employee-table");
     }
 
     public void weekDataToDatabase(JdbcTemplate jdbcTemplate, String page) {
-        int[] weekNumber = new int[21];
         for (int i = 0; i < 21; i++) {
-            String weeks = Jsoup.parse(page).select("tr").get(0)
+            weeks = Jsoup.parse(page).select("tr").get(0)
                     .select("td").get(i).text();
-            String number = weeks.substring(weeks.indexOf(" ") + 1);
-            weekNumber[i] = Integer.parseInt(number);
+            numberString = weeks.substring(weeks.indexOf(" ") + 1);
+            weekNumber = Integer.parseInt(numberString);
 
-            String namesSql = "Insert INTO weeks (week_number) VALUES ('" + weekNumber[i] + "')";
+            String namesSql = "Insert INTO week (week_number) VALUES ('" + weekNumber + "')";
             jdbcTemplate.update(namesSql);
         }
-        System.out.println(weekNumber.length + " rows has been inserted into week-table");
+        System.out.println("rows has been inserted into week-table");
     }
 
     public void vacactionDataToDataBase(JdbcTemplate jdbcTemplate, String page) {
-        String firstName;
-        String lastName;
-        String vacationOrNah;
-        int nrOfRows = 0;
-        int[] weekNumber = new int[200];
-
-
         for (int row = 2; row < 52; row++) {
             String fullName = Jsoup.parse(page).select("tr").get(row)
                     .select("th").get(1).text();
@@ -85,34 +80,34 @@ public class DataToDatabase {
             lastName = fullName.substring(fullName.indexOf(" ") + 1);
 
             for (int column = 0; column < 21; column++) {
-                vacationOrNah = Jsoup.parse(page).select("tr").get(row)
+                tdText = Jsoup.parse(page).select("tr").get(row)
                         .select("td").get(column).text();
-                String weeks = Jsoup.parse(page).select("tr").get(0)
-                        .select("td").get(column).text().replaceAll("week ","");
+                weeks = Jsoup.parse(page).select("tr").get(0)
+                        .select("td").get(column).text().replaceAll("week ", "");
 
-                String number = weeks.substring(weeks.indexOf(" ") + 1);
-                weekNumber[row] = Integer.parseInt(number);
-                if (!vacationOrNah.isEmpty()) {
+                numberString = weeks.substring(weeks.indexOf(" ") + 1);
+                weekNumber = Integer.parseInt(numberString);
+                if (!tdText.isEmpty()) {
                     String employeeID = jdbcTemplate.queryForObject("SELECT id FROM employee WHERE first_name" +
                                     " = '" + firstName + "'"
                                     + " AND last_name = '" + lastName + "'"
                             , String.class);
 
-                    String weekID = jdbcTemplate.queryForObject("SELECT id FROM weeks WHERE week_number" +
-                                    " = '" + weekNumber[row] + "'"
+                    String weekID = jdbcTemplate.queryForObject("SELECT id FROM week WHERE week_number" +
+                                    " = '" + weekNumber + "'"
                             , String.class);
 
                     String namesSql = "Insert INTO vacation (employee_id, week_id, text) VALUES ('" + employeeID + "'," +
-                            "'" + weekID + "','" + vacationOrNah + "')";
+                            "'" + weekID + "','" + tdText + "')";
                     jdbcTemplate.execute(namesSql);
-
+                    nrOfRows++;
                 } else {
                     continue;
                 }
             }
-            nrOfRows++;
+
         }
-        System.out.println(nrOfRows + " has been inserted into vacation-table");
+        System.out.println(nrOfRows + " rows has been inserted into vacation-table");
 
     }
 
@@ -122,7 +117,7 @@ public class DataToDatabase {
     }
 
     public void resetAllTables(JdbcTemplate jdbcTemplate) {
-        String truncate = "TRUNCATE TABLE vacation, weeks, employee, team RESTART IDENTITY";
+        String truncate = "TRUNCATE TABLE vacation, week, employee, team RESTART IDENTITY";
         jdbcTemplate.update(truncate);
 
         System.out.println("Reset tables - done");
