@@ -29,8 +29,7 @@ public class TeamController {
         String teamString = teamRepo.getReferenceById(3).getTeam_name();
         return teamString;
     }
-    @GetMapping("/teams3")
-    @Query("select team_name from Team")
+    @GetMapping("/team3")
     public List<Team> getTeamNames(@RequestParam String name) {
         List<Team> teamList = teamRepo.findAll();
         return teamList;
