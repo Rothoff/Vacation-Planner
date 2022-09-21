@@ -27,7 +27,7 @@ public class VacationPlannerApplication implements CommandLineRunner {
 
         String page = client.get("https://confluence.services.kambi.com/display/BOS/Vacation+Bet+Offer+Stream");
 
-
+/*
         DataToDatabase dbc = new DataToDatabase();
         dbc.resetAllTables(jdbcTemplate);
         dbc.weekDataToDatabase(jdbcTemplate, page);
@@ -35,7 +35,7 @@ public class VacationPlannerApplication implements CommandLineRunner {
         dbc.employeeDataToDatabase(jdbcTemplate,page);
         dbc.vacactionDataToDataBase(jdbcTemplate,page);
 
-
+ */
     }
 }
 
