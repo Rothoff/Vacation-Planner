@@ -24,16 +24,6 @@ public class TeamController {
         return listTeam;
 
     }
-    @GetMapping("/teams2")
-    public String ttt(Model model) {
-        String teamString = teamRepo.getReferenceById(3).getTeam_name();
-        return teamString;
-    }
-    @GetMapping("/team3")
-    public List<Team> getTeamNames(@RequestParam String name) {
-        List<Team> teamList = teamRepo.findAll();
-        return teamList;
-    }
 
 
 }

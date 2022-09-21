@@ -3,23 +3,24 @@ package com.example.vacationplanner.model;
 import javax.persistence.*;
 
 @Entity
-@Table (name = "employee")
+@Table(name = "employee")
 public class Employee {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private String first_name;
     private String last_name;
+    @ManyToOne
+    @JoinColumn(name = "team_id")
+    private Team team;
 
-    private int team_id;
-
-    public int getTeam_id() {
-        return team_id;
+    public Team getTeam() {
+        return team;
     }
 
-    public void setTeam_id(int team_id) {
-        this.team_id = team_id;
+    public void setTeam(Team team) {
+        this.team = team;
     }
 
     public Integer getId() {
