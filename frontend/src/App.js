@@ -1,15 +1,18 @@
 import './App.css';
 import Employee from './components/Employee'
 import MyAppBar from './components/MyAppbar'
+import StapleChart from './components/Chart.jsx'
 import React from 'react'
 
 function App() {
   return (
     <div className="App">
-      <MyAppBar/>
-      <Employee/>
+
+      <MyAppBar />
+      <StapleChart/>
+
     </div>
-  );ls
+  );
 }
 
 export default App;
