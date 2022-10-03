@@ -16,3 +16,8 @@ code {
   display: flex;
   justify-content: center
   }
+
+  #chart-div {
+    display:flex;
+    justify-content: center;
+  }

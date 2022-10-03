@@ -6,7 +6,6 @@ import { BrowserRouter, Routes} from "react-router-dom";
 import Dashboard from './pages/Dashboard';
 import { Employees, AddEmployee } from './pages/Employees';
 import {Team, AddTeam } from './pages/Team';
-
 function App() {
   return (
    
@@ -24,5 +23,4 @@ function App() {
     
   );
 }
-
 export default App;

@@ -1,28 +1,17 @@
 
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, Cell, Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Selectlabels from '../Selectbar/Selectlabels';
+
 
 const defaultData = [
 ];
 
 function StapleChart() {
-  /**
-   * set all the states you want to keep, useState takes as parameter the initial value, e.g. [] as an empty array
-   * It returns an array with different elements, the first one is the state itself and the second one 
-   * is the method that modifies that state, the only way to modify that state is calling that method.
-   * For example if you want to modify teamsData, never do teamsData = something, instead use setTeamsData(newValue);
-   * if your state is an array, and you have to modify it, copy the array in a new variable in an immutable way,
-   * do whatever you need to it and then pass it to the setTeamsData() method.
-   */
+  
   const [teamsData, setTeamsData] = useState([]);
   const [data, setData] = useState(defaultData)
 
-  /**
-   * with useEffects you can run functions in different moments of the lifecycle of the component,
-   * e.g. when mounting, unmounting, when some property changes. it takes a function as first parameter,
-   * and an array with the elements that will trigger the function, if empty it will function as a mount effect.
-   * This in its simplest way
-   */
   useEffect(() => {
     async function teamVacationData() {
       const response = await fetch("http://localhost:8080/vacation/2");
@@ -50,7 +39,6 @@ function StapleChart() {
       }
     }
     teamVacationData();
-    console.log('i fire once');
   }, []);
 
   // Listen for changes in teamsData
