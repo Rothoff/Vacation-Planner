@@ -37,13 +37,11 @@ public class VacationController {
         return vacationRepository.findAll();
     }
 
+
     @GetMapping("/2")
     public String findAllv() {
         List<Integer>[] arr = new ArrayList[21];
-
         int teamMOnVacation = 0;
-        int count = 0;
-
         for (int week = 0; week < 21; week++) {
             List<Integer> intlist = new ArrayList<>();
             for (int team = 0; team< 13; team++) {

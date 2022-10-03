@@ -1,4 +1,4 @@
-package com.example.vacationplanner.database;
+package com.example.vacationplanner.controller.database;
 
 import org.jsoup.Jsoup;
 import org.springframework.jdbc.core.JdbcTemplate;
