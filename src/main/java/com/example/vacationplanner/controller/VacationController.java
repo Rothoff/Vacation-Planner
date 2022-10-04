@@ -37,7 +37,6 @@ public class VacationController {
         return vacationRepository.findAll();
     }
 
-
     @GetMapping("/2")
     public String findAllv() {
         List<Integer>[] arr = new ArrayList[21];

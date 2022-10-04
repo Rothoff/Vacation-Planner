@@ -11,13 +11,12 @@ import java.net.MalformedURLException;
 
 public class HTMLunitClient {
 
-    //Create a new WebClient with any BrowserVersion. WebClient belongs to the
-    //HtmlUnit library.
+    //Create a new WebClient
     WebClient WEB_CLIENT = new WebClient(BrowserVersion.CHROME);
 
     //webClient.getOptions().setCssEnabled(true);
 
-    //This is pretty self explanatory, these are your Reddit credentials.
+    //Credentials
     private final String username;
     private final String password;
 
@@ -36,10 +35,6 @@ public class HTMLunitClient {
         //This is the URL where we log in, easy.
         String loginURL = "https://confluence.services.kambi.com/login.action?logout=true";
         try {
-
-            //Okay, bare with me here. This part is simple but it can be tricky
-            //to understand at first. Reference the login form above and follow
-            //along.
 
             //Create an HtmlPage and get the login page.
             WEB_CLIENT.getOptions().setUseInsecureSSL(true);
