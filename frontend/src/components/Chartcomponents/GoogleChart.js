@@ -15,7 +15,7 @@ const collection = [
   ['Test', 'Vacation', new Date(2022, 3, 1),  new Date(2022, 5, 4)],
 ]
 
-collection.push('Frida', 'Vacation', new Date(2022, 3, 1), new Date(2022, 5, 4))
+collection.push(['Frida', 'Vacation', new Date(2022, 3, 1), new Date(2022, 5, 4)])
 
 return collection;
 

@@ -5,6 +5,7 @@ import com.example.vacationplanner.model.Employee;
 import com.example.vacationplanner.model.Team;
 import com.example.vacationplanner.model.Vacation;
 import com.example.vacationplanner.repository.EmployeeRepository;
+import com.example.vacationplanner.repository.TeamRepository;
 import com.example.vacationplanner.repository.VacationRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -32,6 +33,12 @@ public class VacationController {
     @Autowired
     private VacationRepository vacationRepository;
 
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
     @GetMapping("/all")
     public Iterable<Vacation> findAll() {
         return vacationRepository.findAll();
@@ -45,7 +52,7 @@ public class VacationController {
             List<Integer> intlist = new ArrayList<>();
             for (int team = 0; team< 13; team++) {
                 for (Vacation v : vacationRepository.findAll()) {
-                    if (v.getWeek().getId() == week + 1 && v.getEmployee().getTeam().getId() == team + 1 && v.getText().equalsIgnoreCase("x")) {
+                    if (v.getWeek().getId() == week + 1 && v.getEmployee().getTeam().getId() == team + 1 && v.getText()!=("") && !v.getText().equalsIgnoreCase("Mngr") && !v.getText().equalsIgnoreCase("PO")){
                         teamMOnVacation++;
                     }
                 }
@@ -58,5 +65,24 @@ public class VacationController {
         String json = new Gson().toJson(arr);
         return json;
     }
+
+    @GetMapping("/3")
+    public String empsPerTeam() {
+        ArrayList list = new ArrayList<>();
+        int count = 0;
+        for (int team = 0; team < teamRepository.findAll().size(); team++) {
+            for (Employee employee : employeeRepository.findAll()) {
+                if (employee.getTeam().getId() == team+1){
+                    count++;
+                }
+            }
+            list.add(count);
+            count=0;
+        }
+        String json = new Gson().toJson(list);
+        return json;
+
+    }
+
 }
 

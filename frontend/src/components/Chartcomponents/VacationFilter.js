@@ -2,16 +2,16 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Container, Paper, Button } from '@mui/material';
 import { Chart } from "react-google-charts";
+import { ClassSharp } from '@mui/icons-material';
 
-const getSundayFromWeekNum = (weekNum, year) => {
-  const sunday = new Date(year, 0, (1 + (weekNum - 1) * 7));
+export const getSundayFromWeekNum = (weekNum, year) => {
+  const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
   while (sunday.getDay() !== 0) {
-    sunday.setDate(sunday.getDate()-1);
+    sunday.setDate(sunday.getDate() - 1);
   }
   return sunday;
 }
 
-console.log(getSundayFromWeekNum(10, 2021))
 
 export const data = [
   [
@@ -20,7 +20,6 @@ export const data = [
     { type: "date", id: "start" },
     { type: "date", id: "end" },
   ],
- 
 ];
 
 function EmployeesOnVacation(props) {
@@ -41,23 +40,62 @@ function EmployeesOnVacation(props) {
   }, [])
 
   useEffect(() => {
-
     const filterResults = (employees.filter(o => o.employee.team.id === team));
     setResults(filterResults);
-    results.map(names => console.log(names.employee.first_name));
   }, [team]) // <-- here put the parameter to listen
 
+  /* First row doesnt show for some reason */
+  collection.push(['first row', 'Vacation', new Date(2021, 3, 1), new Date(2022, 5, 4)],)
 
+  {
+    results.map(emps => {
+      const sunday = getSundayFromWeekNum(emps.week.week_number, 2022);
+      const monday = new Date(sunday);
+      monday.setDate(monday.getDate() - 6)
+      var text = emps.text;
+      if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr")) {
+        if (isNaN(text)) {
+          if (text = "X" || "x") {
+            text = "vac"
+          }
+        } else {
+          sunday.setDate(text)
+          monday.setDate(text)
+          if (monday.getMonth() == sunday.getMonth()) {
+          } else {
+            sunday.setMonth(monday.getMonth())
+          }
+        }
+      } else if (text.includes("Mngr")) {
+        text = "Mngr"
+      } else {
+        const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0]
+        const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop()
+        sunday.setDate(afterSplitSecondDate);
+        if (!afterSplitSecondDate == "") {
+          if (afterSplitFirstDate == "") {
+            monday.setDate(afterSplitSecondDate);
+            sunday.setMonth(monday.getMonth());
+          } else {
+            monday.setDate(afterSplitFirstDate);
+          }
+        } else {
+          monday.setDate(afterSplitSecondDate);
+        }
 
-  {results.map(emps => {
-    collection.push([emps.employee.first_name, emps.text, new Date(2022, 6, 7),  new Date(2022, 6, 9) ])
-  })
+      }
+      collection.push([emps.employee.first_name, text, monday, sunday])
+    })
   }
 
+
   return (
-<div class = "center"><Chart chartType="Timeline" data={collection} width="90%" height="400px"/>
-  </div>
- 
+    <div id="parentChart">
+      <div></div>
+      <div id="googleChart"><Chart chartType="Timeline" data={collection} width="90%" height="400px" />
+      </div>
+      <div></div>
+    </div>
   );
 
 }

@@ -15,9 +15,39 @@ code {
 .center {
   display: flex;
   justify-content: center
-  }
+}
 
-  #chart-div {
-    display:flex;
-    justify-content: center;
-  }
+#chart-div {
+  display: flex;
+  justify-content: center;
+}
+
+#textPosition{
+  display: flex;
+  justify-items: center;
+}
+
+#button {
+  display: flex;
+}
+
+#parentDiv {
+  display: flex;
+  justify-content: space-evenly
+}
+
+#ymw {
+  display: flex;
+}
+
+#checkbox {
+  display: flex;
+  justify-content: center;
+ 
+}
+
+#googleChart{
+  display: flex;
+  justify-content: center;
+ margin-left: 10%
+}

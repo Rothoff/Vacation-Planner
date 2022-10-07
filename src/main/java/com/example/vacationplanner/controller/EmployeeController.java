@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -17,16 +18,36 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepo;
 
-   @GetMapping("/all")
-    public Iterable<Employee> findAll(){
+    @Autowired
+    private TeamRepository teamRepo;
+
+
+    @GetMapping("/all")
+    public Iterable<Employee> findAll() {
         return employeeRepo.findAll();
     }
 
     @GetMapping("/all/{teamId}")
-    public String findByTeamIdTeam (@PathVariable("teamId") int teamId){
-       return employeeRepo.findAll().get(teamId).getTeam().getTeam_name();
+    public String findByTeamIdTeam(@PathVariable("teamId") int teamId) {
+        return employeeRepo.findAll().get(teamId).getTeam().getTeam_name();
     }
 
+    @GetMapping("/empsteam")
+    public List empsPerTeam() {
+        ArrayList list = new ArrayList<>();
+        int count = 0;
+        for (int team = 0; team < 13; team++) {
+            for (Employee employee : employeeRepo.findAll()) {
+                if (employee.getTeam().getId() == team+1){
+                    count++;
+                }
+            }
+            System.out.println(teamRepo.findAll().get(team).getTeam_name());
+            System.out.println(count);
+            list.add(count);
+            count=0;
+        }
+        return list;
 
-
+    }
 }
