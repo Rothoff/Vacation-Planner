@@ -7,6 +7,15 @@ function pieChart(props){
     const [teamsAmountData, setTeamsAmountData] = useState([])
     const [employees, setEmployees] = useState([])
 
+    const getSundayFromWeekNum = (weekNum, year) => {
+        const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
+        while (sunday.getDay() !== 0) {
+          sunday.setDate(sunday.getDate() - 1);
+        }
+        return sunday;
+      }
+      
+
     useEffect(() => {
         async function teamData() {
           const response = await fetch("http://localhost:8080/vacation/3");
@@ -26,9 +35,12 @@ function pieChart(props){
       }, [])
   
     var vacDays = Number(0);
-    {
+    
       employees.map(emps2 => {
+        const sunday = getSundayFromWeekNum(emps2.week.week_number, 2022);
+        const monday = new Date(sunday);
         var text = emps2.text;
+        var daysDiff = 0;
         if (emps2.week.id == week && emps2.employee.team.id == team) {
           if (!text.includes(",") && !text.includes("-")) {
             if (isNaN(text)) {
@@ -42,13 +54,23 @@ function pieChart(props){
           else {
             const afterSplitFirstDate1 = text.split(/[-,:e?" "]/)[0]
             const afterSplitSecondDate1 = text.split(/[-,:e?" "]/).pop()
-            var daysDiff = (Number(afterSplitSecondDate1) - Number(afterSplitFirstDate1));
+
+            if(afterSplitSecondDate1<afterSplitFirstDate1){
+                monday.setDate(afterSplitFirstDate1);
+                sunday.setMonth(monday.getMonth()+1);
+                sunday.setDate(afterSplitSecondDate1);
+
+            daysDiff = parseInt((sunday - monday) / (1000 * 60 * 60 * 24), 10); 
+
+            }else {
+            daysDiff = (Number(afterSplitSecondDate1) - Number(afterSplitFirstDate1));
+            }
             vacDays+=Number(daysDiff)
           }
         }
       }
       )
-    }
+    
   
   var totalDaysForTeam = amountInTeam*Number(5);
   

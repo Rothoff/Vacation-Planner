@@ -50,6 +50,7 @@ function EmployeesOnVacation(props) {
   {
     results.map(emps => {
       const sunday = getSundayFromWeekNum(emps.week.week_number, 2022);
+      console.log(emps.employee.first_name);
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 6)
       var text = emps.text;
@@ -76,14 +77,22 @@ function EmployeesOnVacation(props) {
           if (afterSplitFirstDate == "") {
             monday.setDate(afterSplitSecondDate);
             sunday.setMonth(monday.getMonth());
+          } else if (afterSplitSecondDate < afterSplitFirstDate) {
+            monday.setDate(afterSplitFirstDate);
+            sunday.setMonth(monday.getMonth() + 1);
+            sunday.setDate(afterSplitSecondDate);
           } else {
             monday.setDate(afterSplitFirstDate);
+            if (monday.getMonth() != sunday.getMonth()) {
+               monday.setMonth(sunday.getMonth());
+             
+            }
           }
         } else {
           monday.setDate(afterSplitSecondDate);
         }
-
       }
+
       collection.push([emps.employee.first_name, text, monday, sunday])
     })
   }
