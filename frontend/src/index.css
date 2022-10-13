@@ -39,8 +39,11 @@ code {
 #ymw {
   display: flex;
 }
-
 #checkbox {
+  display: flex;
+}
+
+#buttonBox {
   display: flex;
   justify-content: center;
  
@@ -51,3 +54,4 @@ code {
   justify-content: center;
  margin-left: 10%
 }
+

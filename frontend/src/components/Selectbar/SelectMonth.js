@@ -8,106 +8,109 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { CheckBox, SetMealOutlined, ThirtyFpsSelect } from '@mui/icons-material';
-import Checkbox from '@mui/material/Checkbox';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
-const useSelectMonth = ({ onChange }) => {
+const SelectMonth = ({ onChange }) => {
 
     const [count, setCount] = useState(0);
-    const [month, setMonth] = React.useState('');
-    const [week, setWeek] = React.useState('');
+    const [month, setMonth] = useState('');
+    const [week, setWeek] = useState('');
+    const [weeks, setWeeks] = useState([])
 
-
-    const handleChange = (event) => {
-        setMonth(event.target.value);
-        onChange(event.target.value);
-        return month, week;
-    };
-
-    const handleChange2 = (event) => {
-        setWeek(event.target.value);
-        onChange(event.target.value);
-        console.log(week);
-        return week, month;
-    };
-
-
-    const weeks = [];
-    for (let i = 0; i < 52; i++) {
-        weeks.push(i);
-    }
 
     useEffect(() => {
-    }, [count]);
+        function triggerOnChange() {
+            if (checked2 == false) {
+                setWeek(0);
+                if (count == 13) {
+                    setCount(0);
+                }
+                setMonth(count);
 
-    const handleClickPositive = event => {
+                onChange(null, count);
+            } else if (checked1 == false) {
+                setMonth(0);
+                if (count == 22) {
+                    setCount(0)
+                }
+                setWeek(count);
+                onChange(count, null);
+            }
+        }
+        triggerOnChange();
+    }, [count])
+
+    useEffect(() => {
+        function loadWeeks() {
+            const array = [];
+            for (let i = 15; i < 33; i++) {
+                array.push(i);
+            }
+            setWeeks(array);
+            console.log(array)
+        }
+        loadWeeks();
+    }, []);
+
+    const handleClickPositive = () => {
         setCount(count + 1);
-        if (checked2 == false) {
-            setWeek(0);
-            if (count == 12) {
-                setCount(0);
-            }
-            setMonth(count);
-        } else if (checked1 == false) {
-            setMonth(0);
-            if (count == 20) {
-                setCount(0)
-            }
-            setWeek(count);
-        }
-        onChange(count);
     };
-    const handleClickNegative = event => {
+    const handleClickNegative = () => {
         setCount(count - 1);
-        if (checked2 == false) {
-            setWeek(0);
-            if (count == 0) {
-                setCount(12);
-            }
-            setMonth(count);
-        } else if (checked1 == false) {
-            setMonth(0);
-            if (count == 0) {
-                setCount(20)
-            }
-            setWeek(count);
-        }
-        onChange(count);
     };
 
-    const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
+
     const [checked1, setChecked1] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
 
+    const onWeekSelection = (event) => {
+        setWeek(event.target.value)
+        setCount(event.target.value)
+    }
+
+    const onMonthSelection = (event) => {
+        setMonth(event.target.value)
+        setCount(event.target.value)
+    }
+
+
     const toggleCheckBox = event => {
-        setChecked2(false);
         setChecked1(event.target.checked1)
+        setChecked2(false)
         return checked1
     }
 
     const toggleCheckBox2 = event => {
-        setChecked1(false);
         setChecked2(event.target.checked2)
+        setChecked1(false)
         return checked2
+    }
+    const toggleCheckBox3 = () => {
+        setChecked2(false)
+        setChecked1(false)
     }
 
     function CheckBoxes() {
         return (
 
-            <div id="checkbox">
-                <h3 id="textPosition">Month</h3>
-                <Checkbox {...label}
-                    checked={checked1}
-                    onChange={toggleCheckBox}
-                    value="1"
-                    id="CheckMonth"
-                />
-                <h3 id="textPosition">Week</h3>
-                <Checkbox {...label}
-                    checked={checked2}
-                    onChange={toggleCheckBox2}
-                    value="2"
-                    id="CheckWeek" />
+            <div id="buttonBox">
+                <ButtonGroup variant="text" aria-label="text button group">
+                    <Button
+                        onClick={toggleCheckBox2}
+                        value="1"
+                        id="CheckWeek"
+                    >Week</Button>
+                    <Button
+                        onClick={toggleCheckBox}
+                        value="2"
+                        id="CheckMonth"
+                    >Month</Button>
+                    <Button
+                        onClick={toggleCheckBox3}
+                        value="3"
+                        id="CheckYear"
+                    >Year</Button>
+                </ButtonGroup>
 
             </div>
         );
@@ -122,7 +125,8 @@ const useSelectMonth = ({ onChange }) => {
                         id="demo-select-small"
                         value={month}
                         label="Month"
-                        onChange={handleChange}>
+                        onChange={onMonthSelection}
+                    >
                         <MenuItem value=""><em>None</em></MenuItem>
                         <MenuItem value={1}>January</MenuItem>
                         <MenuItem value={2}>February</MenuItem>
@@ -148,7 +152,8 @@ const useSelectMonth = ({ onChange }) => {
                         id="demo-select-small"
                         value={week}
                         label="Weeks"
-                        onChange={handleChange2}>
+                        onChange={onWeekSelection}
+                    >
                         <MenuItem value=""><em>None</em></MenuItem>
                         <MenuItem value={1}>15</MenuItem>
                         <MenuItem value={2}>16</MenuItem>
@@ -174,12 +179,14 @@ const useSelectMonth = ({ onChange }) => {
                     </Select>
                 </FormControl>
             );
+        }else {
+            setMonth(0);
+            setWeek(null);
         }
     }
 
 
     return (
-
         <div id="parentDiv">
             <div id="checkbox"><CheckBoxes /></div>
             <div id="ymw">
@@ -192,4 +199,4 @@ const useSelectMonth = ({ onChange }) => {
     );
 
 }
-export default useSelectMonth;
+export default SelectMonth;

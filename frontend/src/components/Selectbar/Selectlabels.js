@@ -4,7 +4,6 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import EmployeesOnVacation from '../Chartcomponents/VacationFilter';
 
 const useSelectlabels = ({onChange}) => {
   const [team, setTeam] = React.useState('');
