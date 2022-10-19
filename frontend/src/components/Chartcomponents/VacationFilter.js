@@ -78,13 +78,14 @@ const EmployeesOnVacation = (props) => {
       var text = emps.text;
       if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
+          //Here goes ":E", "?"
           if (text = "X" || "x") {
             text = "vac"
           }
         } else {
           monday.setDate(text)
           sunday.setDate(monday.getDate() + 1)
-          if (monday.getMonth() == sunday.getMonth()) {
+          if (monday.getMonth() === sunday.getMonth()) {
           } else if (sunday.getDate() < 6) {
             monday.setMonth(sunday.getMonth())
           } else {
@@ -99,9 +100,10 @@ const EmployeesOnVacation = (props) => {
       } else {
         const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0]
         const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop()
+
         sunday.setDate(afterSplitSecondDate)
-        if (!afterSplitSecondDate == "") {
-          if (afterSplitFirstDate == "") {
+        if (!afterSplitSecondDate === "") {
+          if (afterSplitFirstDate === "") {
             monday.setDate(afterSplitSecondDate);
             sunday.setMonth(monday.getMonth());
           } else if (afterSplitSecondDate < afterSplitFirstDate) {
@@ -110,7 +112,7 @@ const EmployeesOnVacation = (props) => {
             sunday.setDate(afterSplitSecondDate);
           } else {
             monday.setDate(afterSplitFirstDate);
-            if (monday.getMonth() != sunday.getMonth()) {
+            if (monday.getMonth() !== sunday.getMonth()) {
               if (monday.getDate() > 23) {
                 sunday.setMonth(monday.getMonth());
               } else {
@@ -124,28 +126,24 @@ const EmployeesOnVacation = (props) => {
         }
         text = "vac";
       }
-      if (weekId == emps.week.id && month == null) {
+      if (weekId === emps.week.id && month === null) {
         var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
         lastDay.setDate(lastDay.getDate() + 1);
         var firstDay = new Date(lastDay);
         firstDay.setDate(firstDay.getDate() - 7)
 
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
-        /* collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", sunday, lastDay])
-         if (firstDay.getDate() != monday.getDate()) {
-           collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", firstDay, monday])
-         }
-         */
-      } else if (month == monday.getMonth() + 1 && weekId == null) {
-        if (sunday.getMonth() == month) {
+        
+      } else if (month === monday.getMonth() + 1 && weekId == null) {
+        if (sunday.getMonth() === month) {
           var date = new Date();
           var lastDay = new Date(date.getFullYear(), month, 0);
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, lastDay])
         } else {
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
         }
-      } else if (month == sunday.getMonth() + 1 && weekId == null) {
-        if (monday.getMonth() != (month - 1)) {
+      } else if (month === sunday.getMonth() + 1 && weekId === null) {
+        if (monday.getMonth() !== (month - 1)) {
           var date = new Date();
           var firstDay = new Date(date.getFullYear(), month - 1, 1)
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, firstDay, sunday])
@@ -159,31 +157,27 @@ const EmployeesOnVacation = (props) => {
 
     let daysDiff = 0;
     //--------------DATA FOR PIE CHART-----------------
-
-    console.log("FROM VACATIONFILTER: ",vacDays);
-
-
     useEffect(() => {
-    if (weekId != null && month == null) {
+    if (weekId !== null && month === null) {
       collection.map(coll => {
         var diffTime = Math.abs(coll[3] - coll[2]);
         var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diff == 7) {
+        if (diff === 7) {
           diff -= 2
-        } else if (diff == 6) {
+        } else if (diff === 6) {
           diff -= 2
         }
         daysDiff += diff
       })
       setVacDays(daysDiff)
       onChange(daysDiff)
-    } else if (month != null && weekId == null) {
+    } else if (month !== null && weekId === null) {
       collection.map(coll => {
         var diffTime = Math.abs(coll[3] - coll[2]);
         var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diff == 7) {
+        if (diff === 7) {
           diff -= 2
-        } else if (diff == 6) {
+        } else if (diff === 6) {
           diff -= 2
         }
         daysDiff += diff

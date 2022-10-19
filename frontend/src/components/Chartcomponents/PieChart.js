@@ -6,18 +6,6 @@ function pieChart(props) {
     const [teamsAmountData, setTeamsAmountData] = useState([])
     const [employees, setEmployees] = useState([])
    
-
-    console.log("FROM PIE CHART: ", vacDays)
-
-    const getSundayFromWeekNum = (weekNum, year) => {
-        const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
-        while (sunday.getDay() !== 0) {
-            sunday.setDate(sunday.getDate() - 1);
-        }
-        return sunday;
-    }
-
-
     useEffect(() => {
         async function teamData() {
             const response = await fetch("http://localhost:8080/vacation/3");

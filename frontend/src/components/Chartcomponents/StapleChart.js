@@ -41,13 +41,6 @@ function StapleChart() {
     teamVacationData();
   }, []);
 
-  // Listen for changes in teamsData
-  useEffect(() => {
-    // whatever thing you need to do when that data changes do it here
-    // If you need to update the data object you can do it here
-    function doSomethingWithTeamsData() {}
-    doSomethingWithTeamsData();
-  }, [teamsData]);
 
   return (
     <div class="center">

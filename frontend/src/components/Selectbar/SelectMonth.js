@@ -20,16 +20,16 @@ const SelectMonth = ({ onChange }) => {
 
     useEffect(() => {
         function triggerOnChange() {
-            if (checked2 == false) {
+            if (checked2 === false) {
                 setWeek(0);
-                if (count == 13) {
+                if (count === 13) {
                     setCount(0);
                 }
                 setMonth(count);
                 onChange(null, count);
-            } else if (checked1 == false) {
+            } else if (checked1 === false) {
                 setMonth(0);
-                if (count == 22) {
+                if (count === 22) {
                     setCount(0)
                 }
                 setWeek(count);
@@ -114,7 +114,7 @@ const SelectMonth = ({ onChange }) => {
         );
     }
     function MenuThing() {
-        if (checked2 == false) {
+        if (checked2 === false) {
             return (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel id="demo-select-small">Month</InputLabel>
@@ -141,7 +141,7 @@ const SelectMonth = ({ onChange }) => {
                     </Select>
                 </FormControl>
             );
-        } else if (checked1 == false) {
+        } else if (checked1 === false) {
             return (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel id="demo-select-small">Weeks</InputLabel>

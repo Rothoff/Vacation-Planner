@@ -4,16 +4,41 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
+import { useState, useEffect } from 'react';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 const useSelectlabels = ({onChange}) => {
   const [team, setTeam] = React.useState('');
+  const [allEmployees, setAllEmployees] = useState([])
+  const top100Films = [];
 
-  const handleChange = (event) => {
+    const handleChange = (event) => {
     setTeam(event.target.value);
     onChange(event.target.value)
     return team;
   };
 
+  useEffect(() => {
+    fetch("http://localhost:8080/employee/all")
+      .then(res => res.json())
+      .then((allEmployeesResult) => {
+        setAllEmployees(allEmployeesResult);
+      }
+      )
+  }, [])
+
+
+
+  allEmployees.map(employee=>{
+    if(employee.team.id === team){
+    top100Films.push(employee.first_name + " " + employee.last_name)
+  } else{
+    top100Films.push(employee.first_name + " " + employee.last_name)
+  }
+  })
+
+  console.log(team)
 
   return (
     <div>
@@ -46,11 +71,13 @@ const useSelectlabels = ({onChange}) => {
         </Select>
         </FormControl>
         <FormControl sx={{ m: 2, minWidth: 100, width: 400}}>
-           <TextField id="outlined-basic" label="Name" variant="outlined">
-            <em>
-              name
-            </em>
-           </TextField>
+        <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={top100Films}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label="Employee" />}
+    />
            </FormControl>
            </center>
 
