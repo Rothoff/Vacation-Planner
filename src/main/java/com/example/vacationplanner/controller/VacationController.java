@@ -44,6 +44,7 @@ public class VacationController {
         return vacationRepository.findAll();
     }
 
+    //TODO change api call name
     @GetMapping("/2")
     public String findAllv() {
         List<Integer>[] arr = new ArrayList[21];
@@ -66,9 +67,10 @@ public class VacationController {
         return json;
     }
 
+
     @GetMapping("/3")
     public String empsPerTeam() {
-        ArrayList list = new ArrayList<>();
+        ArrayList<Integer> list = new ArrayList<>();
         int count = 0;
         for (int team = 0; team < teamRepository.findAll().size(); team++) {
             for (Employee employee : employeeRepository.findAll()) {

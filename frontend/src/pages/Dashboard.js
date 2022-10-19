@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [team, setTeam] = useState(null);
   const [weekId, setWeekId] = useState(null);
   const [month, setMonth] = useState(null);
+  const [vacDays, setVacDays] = useState(null);
 
   const onChangeSelection = (teamId) => {
     setTeam(teamId)
@@ -19,15 +20,17 @@ const Dashboard = () => {
     setMonth(monthId)
   }
 
+  const onChangeSelection3 = (vacDays) => {
+    setVacDays(vacDays)
+  }
 
   return (
     <div className='dashboard'>
       <StapleChart />
       <Selectlabels onChange={onChangeSelection} />
       <SelectMonth onChange={onChangeSelection2} />
-      <EmployeesOnVacation team={team} weekId={weekId} month={month} />
-      <PieChart week={weekId} team={team} />
-
+      <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} />
+      <PieChart week={weekId} team={team} month={month} vacDays={vacDays} />
     </div>
 
   );

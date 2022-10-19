@@ -26,7 +26,6 @@ const SelectMonth = ({ onChange }) => {
                     setCount(0);
                 }
                 setMonth(count);
-
                 onChange(null, count);
             } else if (checked1 == false) {
                 setMonth(0);
@@ -47,7 +46,6 @@ const SelectMonth = ({ onChange }) => {
                 array.push(i);
             }
             setWeeks(array);
-            console.log(array)
         }
         loadWeeks();
     }, []);
@@ -179,9 +177,6 @@ const SelectMonth = ({ onChange }) => {
                     </Select>
                 </FormControl>
             );
-        }else {
-            setMonth(0);
-            setWeek(null);
         }
     }
 

@@ -22,18 +22,17 @@ export const data = [
   ],
 ];
 
-function EmployeesOnVacation(props) {
+const EmployeesOnVacation = (props) => {
   const { team, weekId, month } = props;
   const [employees, setEmployees] = useState([])
   const [results, setResults] = useState([])
   const [allEmployeesResult, setAllEmployeesResult] = useState([])
   const [allEmployees, setAllEmployees] = useState([])
+  const [vacDays, setVacDays] = useState('')
   const collection = []
   const empsNamesArr = [];
   const onVacationArr = [];
-
-
-  console.log("month is:" + month)
+  const { onChange } = props;
 
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
@@ -65,19 +64,19 @@ function EmployeesOnVacation(props) {
   }, [team])
 
   /* First row doesnt show for some reason */
-  collection.push(['first row', 'Vacation', new Date(2021, 3, 1), new Date(2022, 5, 4)],)
+  collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
 
 
-var count = 0; 
+  var count = 0;
   {
     results.map(emps => {
-      count ++;
+      count++;
       const sunday = getSundayFromWeekNum(emps.week.week_number, 2022);
       sunday.setDate(sunday.getDate() + 1)
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 7)
       var text = emps.text;
-      if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr")&& !text.includes("PO")) {
+      if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
           if (text = "X" || "x") {
             text = "vac"
@@ -85,7 +84,6 @@ var count = 0;
         } else {
           monday.setDate(text)
           sunday.setDate(monday.getDate() + 1)
-          
           if (monday.getMonth() == sunday.getMonth()) {
           } else if (sunday.getDate() < 6) {
             monday.setMonth(sunday.getMonth())
@@ -96,9 +94,9 @@ var count = 0;
         }
       } else if (text.includes("Mngr")) {
         text = "Mngr"
-      }  else if (text.includes("PO")) {
+      } else if (text.includes("PO")) {
         text = "PO"
-      }else {
+      } else {
         const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0]
         const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop()
         sunday.setDate(afterSplitSecondDate)
@@ -113,10 +111,10 @@ var count = 0;
           } else {
             monday.setDate(afterSplitFirstDate);
             if (monday.getMonth() != sunday.getMonth()) {
-              if(monday.getDate()>23){
-                sunday.setMonth(monday.getMonth()); //RÄTT VECKA 30 I EM, MEN FEL VECKA 22 I EDGE
-              }else{
-                monday.setMonth(sunday.getMonth()); //RÄTT VECKA 30 I EM, MEN FEL VECKA 22 I EDGE
+              if (monday.getDate() > 23) {
+                sunday.setMonth(monday.getMonth());
+              } else {
+                monday.setMonth(sunday.getMonth());
               }
             }
             sunday.setDate(sunday.getDate() + 1)
@@ -127,17 +125,17 @@ var count = 0;
         text = "vac";
       }
       if (weekId == emps.week.id && month == null) {
-         var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
+        var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
         lastDay.setDate(lastDay.getDate() + 1);
         var firstDay = new Date(lastDay);
         firstDay.setDate(firstDay.getDate() - 7)
 
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
-       /* collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", sunday, lastDay])
-        if (firstDay.getDate() != monday.getDate()) {
-          collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", firstDay, monday])
-        }
-        */
+        /* collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", sunday, lastDay])
+         if (firstDay.getDate() != monday.getDate()) {
+           collection.push([emps.employee.first_name + " " + emps.employee.last_name, "@office", firstDay, monday])
+         }
+         */
       } else if (month == monday.getMonth() + 1 && weekId == null) {
         if (sunday.getMonth() == month) {
           var date = new Date();
@@ -146,17 +144,60 @@ var count = 0;
         } else {
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
         }
-      } else if (month == sunday.getMonth() + 1 && weekId == null){
-        if (monday.getMonth() != (month-1)) {
+      } else if (month == sunday.getMonth() + 1 && weekId == null) {
+        if (monday.getMonth() != (month - 1)) {
           var date = new Date();
-          var firstDay = new Date(date.getFullYear(), month-1, 1)
+          var firstDay = new Date(date.getFullYear(), month - 1, 1)
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, firstDay, sunday])
         } else {
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
         }
       }
-    
     })
+
+
+
+    let daysDiff = 0;
+    //--------------DATA FOR PIE CHART-----------------
+
+    console.log("FROM VACATIONFILTER: ",vacDays);
+
+
+    useEffect(() => {
+    if (weekId != null && month == null) {
+      collection.map(coll => {
+        var diffTime = Math.abs(coll[3] - coll[2]);
+        var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diff == 7) {
+          diff -= 2
+        } else if (diff == 6) {
+          diff -= 2
+        }
+        daysDiff += diff
+      })
+      setVacDays(daysDiff)
+      onChange(daysDiff)
+    } else if (month != null && weekId == null) {
+      collection.map(coll => {
+        var diffTime = Math.abs(coll[3] - coll[2]);
+        var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diff == 7) {
+          diff -= 2
+        } else if (diff == 6) {
+          diff -= 2
+        }
+        daysDiff += diff
+      })
+      setVacDays(daysDiff)
+      onChange(daysDiff)
+    }
+  }, [weekId, month]); 
+
+
+ 
+  
+
+    //----------------PIE CHART-------------------
 
     //array with all employees in {team}
     allEmployeesResult.map(emp => {
@@ -179,11 +220,11 @@ var count = 0;
       empsNotOnVacation.map(emp => {
         collection.push([emp, "", firstDay, firstDay])
         collection.push([emp, "", lastDay, lastDay])
-      // collection.push([emp, "@office", firstDay, lastDay])
+        // collection.push([emp, "@office", firstDay, lastDay])
       }
       )
-    
-        
+
+
     } else if (month != null) {
       var date = new Date();
       var firstDay = new Date(date.getFullYear(), month - 1, 1);
@@ -191,12 +232,10 @@ var count = 0;
       empsNotOnVacation.map(emp => {
         collection.push([emp, "", firstDay, firstDay])
         collection.push([emp, "", lastDay, lastDay])
-      // collection.push([emp, "@office", firstDay, lastDay])
+        // collection.push([emp, "@office", firstDay, lastDay])
       })
     }
   }
-
- 
 
   var options = {
     colors: ['#e0440e', '#e6693e']
