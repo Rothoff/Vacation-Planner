@@ -34,8 +34,6 @@ if(week!=null&&month==null){
     var totalDaysForTeam = amountInTeam * totalDaysOfMonth
 }
     
-console.log("hej");
-
     var workDays = totalDaysForTeam - vacDays;
     const data = [
         ["Vacation", "Popularity"],

@@ -23,7 +23,7 @@ export const data = [
 ];
 
 const EmployeesOnVacation = (props) => {
-  const { team, weekId, month } = props;
+  const { team, weekId, month, employeeName } = props;
   const [employees, setEmployees] = useState([])
   const [results, setResults] = useState([])
   const [allEmployeesResult, setAllEmployeesResult] = useState([])
@@ -33,6 +33,10 @@ const EmployeesOnVacation = (props) => {
   const empsNamesArr = [];
   const onVacationArr = [];
   const { onChange } = props;
+
+  console.log("FROM VACATIONFILTER, EMPLOYEE NAME: ", employeeName)
+  console.log("FROM VACATIONFILTER, TEAM: ", team)
+  console.log("FROM VACATIONFILTER, MONTH: ", month)
 
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")

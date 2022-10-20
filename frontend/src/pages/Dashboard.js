@@ -8,19 +8,20 @@ import EmployeesInAndOut from '../components/Chartcomponents/EmployeesInAndOut';
 
 
 const Dashboard = () => {
+  const [employeeName, setEmployeeName] = useState('');
   const [team, setTeam] = useState(null);
   const [weekId, setWeekId] = useState(null);
   const [month, setMonth] = useState(null);
   const [vacDays, setVacDays] = useState(null);
 
-  const onChangeSelection = (teamId) => {
+  const onChangeSelection = (teamId, employeeName) => {
     setTeam(teamId)
+    setEmployeeName(employeeName)
   }
   const onChangeSelection2 = (weekId, monthId) => {
     setWeekId(weekId)
     setMonth(monthId)
   }
-
   const onChangeSelection3 = (vacDays) => {
     setVacDays(vacDays)
   }
@@ -30,7 +31,7 @@ const Dashboard = () => {
       <StapleChart />
       <Selectlabels onChange={onChangeSelection} />
       <SelectMonth onChange={onChangeSelection2} />
-      <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} />
+      <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} employeeName={employeeName} />
       <PieChart week={weekId} team={team} month={month} vacDays={vacDays} />
       <EmployeesInAndOut week={weekId} team={team}/>
     </div>

@@ -8,16 +8,25 @@ import { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 
 
-const useSelectlabels = ({onChange}) => {
-  const [team, setTeam] = React.useState('');
+const useSelectlabels = ({ onChange }) => {
+  const [team, setTeam] = useState('');
   const [allEmployees, setAllEmployees] = useState([])
-  const top100Films = [];
+  const [employeeName, setEmployeeName] = useState ('');
+  const listOfEmployees = [];
+  
 
-    const handleChange = (event) => {
+  const handleChange = (event) => {
     setTeam(event.target.value);
     onChange(event.target.value)
     return team;
   };
+
+  const handleChangeEmployee = (event, value) => {
+    setEmployeeName(value);
+    onChange(value);
+  }
+
+  console.log("employee: ", employeeName);
 
   useEffect(() => {
     fetch("http://localhost:8080/employee/all")
@@ -28,58 +37,60 @@ const useSelectlabels = ({onChange}) => {
       )
   }, [])
 
-
-
-  allEmployees.map(employee=>{
-    if(employee.team.id === team){
-    top100Films.push(employee.first_name + " " + employee.last_name)
-  } else{
-    top100Films.push(employee.first_name + " " + employee.last_name)
+  if (team !== "") {
+    allEmployees.map(employee => {
+      if (employee.team.id === team) {
+        listOfEmployees.push(employee.first_name + "" + employee.last_name)
+      }
+    })
+  } else {
+    allEmployees.map(employee => {
+      listOfEmployees.push(employee.first_name + "" + employee.last_name)
+    })
   }
-  })
-
-  console.log(team)
 
   return (
     <div>
       <center>
-      <FormControl sx={{ m: 2, minWidth:100, width:400}}>
-        <InputLabel id="team-selector" >Team</InputLabel>
-        <Select
-          labelId="team-selector"
-          id="team-selector"
-          value={team}
-          label="Team"
-          onChange={handleChange}
-        >
-          <MenuItem value="" className='center'>
-            <em>None</em>
-          </MenuItem>
-          <MenuItem value={1}>Sipa</MenuItem>
-          <MenuItem value={2}>Wild</MenuItem>
-          <MenuItem value={3}>Em</MenuItem>
-          <MenuItem value={4}>Arch</MenuItem>
-          <MenuItem value={5}>Bull</MenuItem>
-          <MenuItem value={6}>Hos</MenuItem>
-          <MenuItem value={7}>Gama</MenuItem>
-          <MenuItem value={8}>Jazz</MenuItem>
-          <MenuItem value={9}>HoPD</MenuItem>
-          <MenuItem value={10}>Best</MenuItem>
-          <MenuItem value={11}>Wolf</MenuItem>
-          <MenuItem value={12}>Edge</MenuItem>
-          <MenuItem value={13}>Po</MenuItem>
-        </Select>
+        <FormControl sx={{ m: 2, minWidth: 100, width: 400 }}>
+          <InputLabel id="team-selector" >Team</InputLabel>
+          <Select
+            labelId="team-selector"
+            id="team-selector"
+            value={team}
+            label="Team"
+            onChange={handleChange}
+          >
+            <MenuItem value="" className='center'>
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={1}>Sipa</MenuItem>
+            <MenuItem value={2}>Wild</MenuItem>
+            <MenuItem value={3}>Em</MenuItem>
+            <MenuItem value={4}>Arch</MenuItem>
+            <MenuItem value={5}>Bull</MenuItem>
+            <MenuItem value={6}>Hos</MenuItem>
+            <MenuItem value={7}>Gama</MenuItem>
+            <MenuItem value={8}>Jazz</MenuItem>
+            <MenuItem value={9}>HoPD</MenuItem>
+            <MenuItem value={10}>Best</MenuItem>
+            <MenuItem value={11}>Wolf</MenuItem>
+            <MenuItem value={12}>Edge</MenuItem>
+            <MenuItem value={13}>Po</MenuItem>
+          </Select>
         </FormControl>
-        <FormControl sx={{ m: 2, minWidth: 100, width: 400}}>
-        <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={top100Films}
-      sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="Employee" />}
-    />
-           </FormControl>
-           </center>
+        <FormControl sx={{ m: 2, minWidth: 100, width: 400 }}>
+          <Autocomplete
+            disablePortal
+            id="combo-box-demo"
+            options={listOfEmployees}
+            sx={{ width: 300 }}
+            renderInput={(params) => <TextField {...params} label="Employee" />}
+            labelId="team-selector"
+            onChange={handleChangeEmployee}
+          />
+        </FormControl>
+      </center>
 
     </div>
   );
