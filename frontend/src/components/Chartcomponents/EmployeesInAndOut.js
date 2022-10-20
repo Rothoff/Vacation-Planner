@@ -45,8 +45,8 @@ function createData(name, inOrOut, date) {
   return { name, inOrOut, date };
 }
 export default function CustomizedTables(props) {
- // const { team } = props;
- // const { week } = props;
+ const { team } = props;
+ const { week } = props;
   let backFromVacation = <WestIcon sx={{ color: 'blue' }} />
   let goingOnVacation = <EastIcon sx={{ color: 'red' }} />
   const [employees, setEmployees] = useState([]);
@@ -93,8 +93,6 @@ export default function CustomizedTables(props) {
     const names = employeesOnvacationInTeam((weekId + 1), teamID).filter(item => !employeesOnvacationInTeam(weekId, teamID).includes(item))
     return names;
   }
-  var team = 5;
-  var week = 11;
   var dateOff = 0;
   var dateBack = 0;
   var month = 0;

@@ -32,7 +32,7 @@ const Dashboard = () => {
       <SelectMonth onChange={onChangeSelection2} />
       <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} />
       <PieChart week={weekId} team={team} month={month} vacDays={vacDays} />
-      <EmployeesInAndOut/>
+      <EmployeesInAndOut week={weekId} team={team}/>
     </div>
 
   );
