@@ -17,16 +17,14 @@ const useSelectlabels = ({ onChange }) => {
 
   const handleChange = (event) => {
     setTeam(event.target.value);
-    onChange(event.target.value)
+    onChange(event.target.value, null)
     return team;
   };
 
   const handleChangeEmployee = (event, value) => {
     setEmployeeName(value);
-    onChange(value);
+    onChange(null, value);
   }
-
-  console.log("employee: ", employeeName);
 
   useEffect(() => {
     fetch("http://localhost:8080/employee/all")

@@ -12,7 +12,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 
 const SelectMonth = ({ onChange }) => {
 
-    const [count, setCount] = useState(0);
+    const [count, setCount] = useState(null);
     const [month, setMonth] = useState('');
     const [week, setWeek] = useState('');
     const [weeks, setWeeks] = useState([])
@@ -20,16 +20,17 @@ const SelectMonth = ({ onChange }) => {
 
     useEffect(() => {
         function triggerOnChange() {
-            if (checked2 === false) {
-                setWeek(0);
-                if (count === 13) {
+            if (checked2 == false) {
+                setWeek(null);
+                if (count == 13) {
                     setCount(0);
                 }
                 setMonth(count);
                 onChange(null, count);
-            } else if (checked1 === false) {
-                setMonth(0);
-                if (count === 22) {
+                
+            } else if (checked1 == false) {
+                setMonth(null);
+                if (count == 22) {
                     setCount(0)
                 }
                 setWeek(count);
@@ -46,6 +47,7 @@ const SelectMonth = ({ onChange }) => {
                 array.push(i);
             }
             setWeeks(array);
+            console.log(array)
         }
         loadWeeks();
     }, []);
@@ -114,7 +116,7 @@ const SelectMonth = ({ onChange }) => {
         );
     }
     function MenuThing() {
-        if (checked2 === false) {
+        if (checked2 == false) {
             return (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel id="demo-select-small">Month</InputLabel>
@@ -125,7 +127,7 @@ const SelectMonth = ({ onChange }) => {
                         label="Month"
                         onChange={onMonthSelection}
                     >
-                        <MenuItem value=""><em>None</em></MenuItem>
+                        <MenuItem value={null}><em>None</em></MenuItem>
                         <MenuItem value={1}>January</MenuItem>
                         <MenuItem value={2}>February</MenuItem>
                         <MenuItem value={3}>March</MenuItem>
@@ -141,7 +143,7 @@ const SelectMonth = ({ onChange }) => {
                     </Select>
                 </FormControl>
             );
-        } else if (checked1 === false) {
+        } else if (checked1 == false) {
             return (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel id="demo-select-small">Weeks</InputLabel>
@@ -152,7 +154,7 @@ const SelectMonth = ({ onChange }) => {
                         label="Weeks"
                         onChange={onWeekSelection}
                     >
-                        <MenuItem value=""><em>None</em></MenuItem>
+                        <MenuItem value={null}><em>None</em></MenuItem>
                         <MenuItem value={1}>15</MenuItem>
                         <MenuItem value={2}>16</MenuItem>
                         <MenuItem value={3}>17</MenuItem>
@@ -177,6 +179,9 @@ const SelectMonth = ({ onChange }) => {
                     </Select>
                 </FormControl>
             );
+        }else {
+            setMonth(0);
+            setWeek(null);
         }
     }
 

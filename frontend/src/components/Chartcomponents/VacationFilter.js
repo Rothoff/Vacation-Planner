@@ -1,4 +1,4 @@
-import { Collections, South } from '@mui/icons-material';
+import { Collections, Iron, South } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
@@ -34,10 +34,6 @@ const EmployeesOnVacation = (props) => {
   const onVacationArr = [];
   const { onChange } = props;
 
-  console.log("FROM VACATIONFILTER, EMPLOYEE NAME: ", employeeName)
-  console.log("FROM VACATIONFILTER, TEAM: ", team)
-  console.log("FROM VACATIONFILTER, MONTH: ", month)
-
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -56,11 +52,17 @@ const EmployeesOnVacation = (props) => {
       )
   }, [])
 
-
   useEffect(() => {
-    const filterResults = (employees.filter(o => o.employee.team.id === team));
-    setResults(filterResults);
-  }, [team]) // <-- here put the parameter to listen
+    if (employeeName === null) {
+      const filterResults = (employees.filter(result => result.employee.team.id === team));
+      setResults(filterResults);
+    } else {
+      let firstName = employeeName.split(" ")[0] + (" ")
+      let lastName = employeeName.split(" ")[1]
+      const filterResults2 = (employees.filter(result => result.employee.first_name === firstName && result.employee.last_name === lastName))
+      setResults(filterResults2);
+    }
+  }, [team, employeeName]) // <-- here put the parameter to listen
 
   useEffect(() => {
     const filterResults2 = (allEmployees.filter(o => o.team.id === team));
@@ -70,16 +72,14 @@ const EmployeesOnVacation = (props) => {
   /* First row doesnt show for some reason */
   collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
 
-
-  var count = 0;
   {
     results.map(emps => {
-      count++;
       const sunday = getSundayFromWeekNum(emps.week.week_number, 2022);
       sunday.setDate(sunday.getDate() + 1)
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 7)
       var text = emps.text;
+
       if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
           //Here goes ":E", "?"
@@ -104,16 +104,15 @@ const EmployeesOnVacation = (props) => {
       } else {
         const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0]
         const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop()
+        sunday.setDate(Number(afterSplitSecondDate) + Number(1))
 
-        sunday.setDate(afterSplitSecondDate)
-        if (!afterSplitSecondDate === "") {
+        if (afterSplitSecondDate !== "") {
           if (afterSplitFirstDate === "") {
             monday.setDate(afterSplitSecondDate);
             sunday.setMonth(monday.getMonth());
           } else if (afterSplitSecondDate < afterSplitFirstDate) {
             monday.setDate(afterSplitFirstDate);
             sunday.setMonth(monday.getMonth() + 1);
-            sunday.setDate(afterSplitSecondDate);
           } else {
             monday.setDate(afterSplitFirstDate);
             if (monday.getMonth() !== sunday.getMonth()) {
@@ -123,29 +122,28 @@ const EmployeesOnVacation = (props) => {
                 monday.setMonth(sunday.getMonth());
               }
             }
-            sunday.setDate(sunday.getDate() + 1)
+
           }
         } else {
-          monday.setDate(afterSplitSecondDate);
+          monday.setDate(afterSplitFirstDate);
         }
         text = "vac";
       }
-      if (weekId === emps.week.id && month === null) {
-        var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
-        lastDay.setDate(lastDay.getDate() + 1);
-        var firstDay = new Date(lastDay);
-        firstDay.setDate(firstDay.getDate() - 7)
 
+      if (weekId === emps.week.id && month === null) {
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
-        
+        if (employeeName == !null) {
+          collection.push(["asdasd", "asdasd", monday, sunday])
+        }
       } else if (month === monday.getMonth() + 1 && weekId == null) {
         if (sunday.getMonth() === month) {
           var date = new Date();
-          var lastDay = new Date(date.getFullYear(), month, 0);
+          var lastDay = new Date(date.getFullYear(), month, 1);
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, lastDay])
         } else {
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
         }
+
       } else if (month === sunday.getMonth() + 1 && weekId === null) {
         if (monday.getMonth() !== (month - 1)) {
           var date = new Date();
@@ -154,14 +152,64 @@ const EmployeesOnVacation = (props) => {
         } else {
           collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
         }
+
+      } else if (weekId === null && month === null) {
+        collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
+
       }
     })
 
+    //array with all employees in {team}
+    allEmployeesResult.map(emp => {
+      empsNamesArr.push(emp.first_name + " " + emp.last_name);
+    })
 
+    //mapping collection and adding the names for specific week/month to a new array
+    collection.map(coll => {
+      onVacationArr.push(coll[0]);
+    })
 
-    let daysDiff = 0;
-    //--------------DATA FOR PIE CHART-----------------
-    useEffect(() => {
+    //array with employees that's not on vacation
+    var empsNotOnVacation = empsNamesArr.filter(item => !onVacationArr.includes(item));
+
+    if (weekId !== null) {
+      var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
+      lastDay.setDate(lastDay.getDate() + 1)
+      var firstDay = new Date(lastDay);
+      firstDay.setDate(firstDay.getDate() - 7)
+      empsNotOnVacation.map(emp => {
+        collection.push([emp, "", firstDay, firstDay])
+        collection.push([emp, "", lastDay, lastDay])
+        // collection.push([emp, "@office", firstDay, lastDay])
+            }
+      )
+      if(employeeName!== null){
+        collection.push(["Week: " + (weekId+Number(14)),"", firstDay, firstDay])
+        collection.push(["Week: " +  (weekId+Number(14)), "", lastDay, lastDay])
+      }
+    } else if (month !== null) {
+      var date = new Date();
+      var firstDay = new Date(date.getFullYear(), month - 1, 1);
+      var lastDay = new Date(date.getFullYear(), month, 1);
+      empsNotOnVacation.map(emp => {
+        collection.push([emp, "", firstDay, firstDay])
+        collection.push([emp, "", lastDay, lastDay])
+        // collection.push([emp, "@office", firstDay, lastDay])
+      })
+      if(employeeName!== null){
+        collection.push(["x","", firstDay, firstDay])
+        collection.push(["x","", lastDay, lastDay])
+      }
+    }
+  }
+
+  var options = {
+    colors: ['#e0440e', '#e6693e']
+  };
+
+  let daysDiff = 0;
+  //--------------DATA FOR PIE CHART-----------------
+  useEffect(() => {
     if (weekId !== null && month === null) {
       collection.map(coll => {
         var diffTime = Math.abs(coll[3] - coll[2]);
@@ -189,55 +237,8 @@ const EmployeesOnVacation = (props) => {
       setVacDays(daysDiff)
       onChange(daysDiff)
     }
-  }, [weekId, month]); 
-
-
- 
-  
-
-    //----------------PIE CHART-------------------
-
-    //array with all employees in {team}
-    allEmployeesResult.map(emp => {
-      empsNamesArr.push(emp.first_name + " " + emp.last_name);
-    })
-
-    //mapping collection and adding the names for specific week/month to a new array
-    collection.map(coll => {
-      onVacationArr.push(coll[0]);
-    })
-
-    //array with employees that's not on vacation
-    var empsNotOnVacation = empsNamesArr.filter(item => !onVacationArr.includes(item));
-
-    if (weekId != null) {
-      var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
-      lastDay.setDate(lastDay.getDate() + 1)
-      var firstDay = new Date(lastDay);
-      firstDay.setDate(firstDay.getDate() - 7)
-      empsNotOnVacation.map(emp => {
-        collection.push([emp, "", firstDay, firstDay])
-        collection.push([emp, "", lastDay, lastDay])
-        // collection.push([emp, "@office", firstDay, lastDay])
-      }
-      )
-
-
-    } else if (month != null) {
-      var date = new Date();
-      var firstDay = new Date(date.getFullYear(), month - 1, 1);
-      var lastDay = new Date(date.getFullYear(), month, 0);
-      empsNotOnVacation.map(emp => {
-        collection.push([emp, "", firstDay, firstDay])
-        collection.push([emp, "", lastDay, lastDay])
-        // collection.push([emp, "@office", firstDay, lastDay])
-      })
-    }
-  }
-
-  var options = {
-    colors: ['#e0440e', '#e6693e']
-  };
+  }, [weekId, month]);
+  //----------------PIE CHART-------------------
 
 
   return (
@@ -252,4 +253,3 @@ const EmployeesOnVacation = (props) => {
 }
 
 export default EmployeesOnVacation;
-
