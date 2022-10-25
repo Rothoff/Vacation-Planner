@@ -52,6 +52,8 @@ export default function CustomizedTables(props) {
   let goingOnVacation = <EastIcon sx={{ color: 'red' }} />
   const [employees, setEmployees] = useState([]);
   const collection = [];
+
+
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -70,11 +72,12 @@ export default function CustomizedTables(props) {
     })
     return employeesOnVacation;
   }
+
   function employeesOnVacationLastWeek(teamID, weekId) {
     const names = employeesOnvacationInTeam((weekId - 1), teamID).filter(item => !employeesOnvacationInTeam(weekId, teamID).includes(item))
     return names;
   }
-  console.log(employeesOnVacationLastWeek(team, week))
+
   function employeesOnVacationNextWeek(teamID, weekId) {
     const names = employeesOnvacationInTeam((weekId + 1), teamID).filter(item => !employeesOnvacationInTeam(weekId, teamID).includes(item))
     return names;
@@ -102,7 +105,7 @@ export default function CustomizedTables(props) {
           var saturday = satDate.getFullYear() + "-" + (satDate.getMonth()) + "-" + satDate.getDate();
           dayOff = new Date(2022, (month.getMonth()), afterSplitFirstDate)
           if (afterSplitSecondDate.length === 0) {
-            dayBack = new Date(2022, (month.getMonth()), dayOff.getDate() + 1)
+            dayBack = new Date(2022, (month.getMonth()), (dayOff.getDate() + 1))
             dateOff = dayOff.getFullYear() + "-" + (dayOff.getMonth()) + "-" + dayOff.getDate();
             dateBack = dayBack.getFullYear() + "-" + (dayBack.getMonth()) + "-" + dayBack.getDate();
             if (dateBack === saturday) {
@@ -114,7 +117,7 @@ export default function CustomizedTables(props) {
           } else {
             dayBack = new Date(2022, (month.getMonth()), afterSplitSecondDate)
             dateOff = dayOff.getFullYear() + "-" + (dayOff.getMonth() + 1) + "-" + dayOff.getDate();
-            dateBack = dayBack.getFullYear() + "-" + (dayBack.getMonth() + 1) + "-" + (dayBack.getDate());
+            dateBack = dayBack.getFullYear() + "-" + (dayBack.getMonth() + 1) + "-" + (dayBack.getDate() + 1);
             if (dateBack === saturday) {
               collection.push(createData([emps2.employee.first_name + emps2.employee.last_name], [goingOnVacation], [dateOff]))
             } else {
@@ -155,7 +158,6 @@ export default function CustomizedTables(props) {
   
   employeesOnVacationLastWeek(team, week).map(lw => {
     if (!(employeesOnVacationLastWeek(team, week).length === 0)) {
-      console.log("bababab")
       const sunday = getSundayFromWeekNum((week + 14), 2022);
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 6)
