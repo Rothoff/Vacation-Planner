@@ -1,7 +1,8 @@
-import { Collections, Iron, South } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
+
+
 
 export const getSundayFromWeekNum = (weekNum, year) => {
   const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
@@ -10,8 +11,6 @@ export const getSundayFromWeekNum = (weekNum, year) => {
   }
   return sunday;
 }
-
-
 
 export const data = [
   [
@@ -23,7 +22,7 @@ export const data = [
 ];
 
 const EmployeesOnVacation = (props) => {
-  const { team, weekId, month, employeeName } = props;
+  const { team, weekId, month, employeeName} = props;
   const [employees, setEmployees] = useState([])
   const [results, setResults] = useState([])
   const [allEmployeesResult, setAllEmployeesResult] = useState([])
@@ -33,6 +32,7 @@ const EmployeesOnVacation = (props) => {
   const empsNamesArr = [];
   const onVacationArr = [];
   const { onChange } = props;
+  
 
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")

@@ -52,10 +52,8 @@ function pieChart(props) {
         totalDaysForTeam = amountInTeam * getWeekdaysInMonth((month - 1), 2022)
     }
 
-    console.log("total days for team", totalDaysForTeam)
-    console.log("vacDays: ", vacDays)
     var workDays = totalDaysForTeam - vacDays;
-    console.log("workdays: ", workDays)
+
     const data = [
         ["Vacation", "Popularity"],
         ["Working", workDays],
