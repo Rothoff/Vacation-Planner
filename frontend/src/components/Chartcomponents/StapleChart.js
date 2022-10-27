@@ -1,23 +1,27 @@
 
 import React, { useState, useEffect } from 'react';
-import { BarChart, Bar, Cell, Line, LineChart, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import Selectlabels from '../Selectbar/Selectlabels';
+import { BarChart, Bar,XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
-const defaultData = [
-];
-
-function StapleChart() {
-  
+function StapleChart(props) {
   const [teamsData, setTeamsData] = useState([]);
-  const [data, setData] = useState(defaultData)
+  const [currentTeam, setCurrentTeam] = useState([]);
+  const { team } = props;
+
+ 
+console.log(team)
+
+
+useEffect(() => {
+  setCurrentTeam(team);
+}, [team])
 
   useEffect(() => {
     async function teamVacationData() {
       const response = await fetch("http://localhost:8080/vacation/2");
       const teams = await response.json();
       let weekNr = 15;
-
+      console.log(teams);
       for (let i = 0; i < 21; i++) {
         setTeamsData(prev => prev.concat([
           {
@@ -35,12 +39,17 @@ function StapleChart() {
             Wolf: teams[i][10],
             Edge: teams[i][11],
             PO: teams[i][12],
-          },]))     
-      }
+           
+          },]))    
+        }
     }
     teamVacationData();
   }, []);
 
+  
+
+ 
+  console.log(teamsData)
 
   return (
     <div class="center">

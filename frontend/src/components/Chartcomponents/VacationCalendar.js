@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
-
-
+//imports from fetch file
+import { fetchEmployees, fetchVacation } from "/Users/erihol/Desktop/VPT-Repo/VacationPlanner/frontend/src/fetch/fetchData.js";
 
 export const getSundayFromWeekNum = (weekNum, year) => {
   const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
@@ -22,18 +22,20 @@ export const data = [
 ];
 
 const EmployeesOnVacation = (props) => {
-  const { team, weekId, month, employeeName} = props;
+  const { team, weekId, month, employeeName } = props;
   const [employees, setEmployees] = useState([])
   const [results, setResults] = useState([])
   const [allEmployeesResult, setAllEmployeesResult] = useState([])
   const [allEmployees, setAllEmployees] = useState([])
   const [vacDays, setVacDays] = useState('')
-  const collection = []
+  const collection = [];
   const empsNamesArr = [];
   const onVacationArr = [];
   const { onChange } = props;
-  
+  let filterResults = [];
 
+
+  //Should be moved out to seperate file. How?
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -43,6 +45,7 @@ const EmployeesOnVacation = (props) => {
       )
   }, [])
 
+   //Should be moved out to seperate file. How?
   useEffect(() => {
     fetch("http://localhost:8080/employee/all")
       .then(res => res.json())
@@ -52,24 +55,25 @@ const EmployeesOnVacation = (props) => {
       )
   }, [])
 
+  //pushing data from fetch depending on if user wants to sort on full team or just one employee
   useEffect(() => {
-    if (employeeName === null) {
-      const filterResults = (employees.filter(result => result.employee.team.id === team));
+    if (employeeName === null) { //only members in choosed team will be mapped
+      filterResults = (employees.filter(result => result.employee.team.id === team));
       setResults(filterResults);
-    } else {
+    } else { //only one employees vacation data will be mapped
       let firstName = employeeName.split(" ")[0] + (" ")
       let lastName = employeeName.split(" ")[1]
-      const filterResults2 = (employees.filter(result => result.employee.first_name === firstName && result.employee.last_name === lastName))
-      setResults(filterResults2);
+      filterResults = (employees.filter(result => result.employee.first_name === firstName && result.employee.last_name === lastName))
+      setResults(filterResults);
     }
-  }, [team, employeeName]) // <-- here put the parameter to listen
+  }, [team, employeeName]) // listening for changes in team and employeenamee props
 
   useEffect(() => {
-    const filterResults2 = (allEmployees.filter(o => o.team.id === team));
-    setAllEmployeesResult(filterResults2);
+    filterResults = (allEmployees.filter(o => o.team.id === team));
+    setAllEmployeesResult(filterResults);
   }, [team])
 
-  /* First row doesnt show for some reason */
+  // First row doesnt show for some reason, so we need to push an empty row
   collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
 
   {
@@ -78,22 +82,25 @@ const EmployeesOnVacation = (props) => {
       sunday.setDate(sunday.getDate() + 1)
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 7)
-      var text = emps.text;
+      let text = emps.text;
 
+    
+
+      //Checking user input
       if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
-          //Here goes ":E", "?"
+          //Here goes "X", ":E", "?"
           if (text = "X" || "x") {
             text = "vac"
           }
+          //If input text is only one number
         } else {
-          monday.setDate(text)
-          sunday.setDate(monday.getDate() + 1)
-          if (monday.getMonth() === sunday.getMonth()) {
-          } else if (sunday.getDate() < 6) {
-            monday.setMonth(sunday.getMonth())
-          } else {
-            sunday.setMonth(monday.getMonth())
+          monday.setDate(text) //first date = user input
+          sunday.setDate(monday.getDate() + 1) //second date is the next day
+          if (sunday.getDate() < 6) { //if this weeks sundays date is < 6, sunday is next month (correct month)
+            monday.setMonth(sunday.getMonth()) //Thats why we have to set mondays (firstdate) month to the correct month
+          } else { // otherwise mondays month is correct
+            sunday.setMonth(monday.getMonth()) 
           }
           text = "vac"
         }
@@ -101,22 +108,23 @@ const EmployeesOnVacation = (props) => {
         text = "Mngr"
       } else if (text.includes("PO")) {
         text = "PO"
-      } else {
-        const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0]
-        const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop()
-        sunday.setDate(Number(afterSplitSecondDate) + Number(1))
+      } else { //here goes the rest, for example "2-5", "15,16"
+        //Splitting "2-5" to [2, - ,5]
+        const afterSplitFirstDate = text.split(/[-,:e?" "]/)[0] //first number =  first date
+        const afterSplitSecondDate = text.split(/[-,:e?" "]/).pop() //second number = second date
+        sunday.setDate(Number(afterSplitSecondDate) + Number(1)) //adding +1 on second date because of google chart
 
         if (afterSplitSecondDate !== "") {
           if (afterSplitFirstDate === "") {
             monday.setDate(afterSplitSecondDate);
             sunday.setMonth(monday.getMonth());
-          } else if (afterSplitSecondDate < afterSplitFirstDate) {
+          } else if (afterSplitSecondDate < afterSplitFirstDate) { //second date is smaller = next month
             monday.setDate(afterSplitFirstDate);
             sunday.setMonth(monday.getMonth() + 1);
           } else {
             monday.setDate(afterSplitFirstDate);
             if (monday.getMonth() !== sunday.getMonth()) {
-              if (monday.getDate() > 23) {
+              if (monday.getDate() > 23) { 
                 sunday.setMonth(monday.getMonth());
               } else {
                 monday.setMonth(sunday.getMonth());
@@ -130,11 +138,10 @@ const EmployeesOnVacation = (props) => {
         text = "vac";
       }
 
+      //pushing data to calendar
       if (weekId === emps.week.id && month === null) {
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
-        if (employeeName == !null) {
-          collection.push(["asdasd", "asdasd", monday, sunday])
-        }
+
       } else if (month === monday.getMonth() + 1 && weekId == null) {
         if (sunday.getMonth() === month) {
           var date = new Date();
@@ -172,6 +179,7 @@ const EmployeesOnVacation = (props) => {
     //array with employees that's not on vacation
     var empsNotOnVacation = empsNamesArr.filter(item => !onVacationArr.includes(item));
 
+    //pushing employees that or not on vacation to google calendar to "hold up" whole week and month
     if (weekId !== null) {
       var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
       lastDay.setDate(lastDay.getDate() + 1)
@@ -180,12 +188,10 @@ const EmployeesOnVacation = (props) => {
       empsNotOnVacation.map(emp => {
         collection.push([emp, "", firstDay, firstDay])
         collection.push([emp, "", lastDay, lastDay])
-        // collection.push([emp, "@office", firstDay, lastDay])
-            }
-      )
-      if(employeeName!== null){
-        collection.push(["Week: " + (weekId+Number(14)),"", firstDay, firstDay])
-        collection.push(["Week: " +  (weekId+Number(14)), "", lastDay, lastDay])
+      })
+      if (employeeName !== null) { //pushing empty row for employee filter to "hold up" week
+        collection.push(["Week: " + (weekId + Number(14)), "", firstDay, firstDay])
+        collection.push(["Week: " + (weekId + Number(14)), "", lastDay, lastDay])
       }
     } else if (month !== null) {
       var date = new Date();
@@ -196,9 +202,9 @@ const EmployeesOnVacation = (props) => {
         collection.push([emp, "", lastDay, lastDay])
         // collection.push([emp, "@office", firstDay, lastDay])
       })
-      if(employeeName!== null){
-        collection.push(["x","", firstDay, firstDay])
-        collection.push(["x","", lastDay, lastDay])
+      if (employeeName !== null) { // holding up month
+        collection.push(["x", "", firstDay, firstDay])
+        collection.push(["x", "", lastDay, lastDay])
       }
     }
   }
@@ -243,10 +249,8 @@ const EmployeesOnVacation = (props) => {
 
   return (
     <div id="parentChart">
-      <div></div>
-      <div id="googleChart"><Chart chartType="Timeline" data={collection} options={options} width="90%" height="400px" />
+      <div id="googleChart"><Chart chartType="Timeline" data={collection} options={options} width="90%" height="40vh" />
       </div>
-      <div></div>
     </div>
   );
 

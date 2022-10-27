@@ -22,7 +22,7 @@ code {
   justify-content: center;
 }
 
-#textPosition{
+#textPosition {
   display: flex;
   justify-items: center;
 }
@@ -31,14 +31,8 @@ code {
   display: flex;
 }
 
-#parentDiv {
-  display: flex;
-  justify-content: space-evenly
-}
 
-#ymw {
-  display: flex;
-}
+
 #checkbox {
   display: flex;
 }
@@ -46,12 +40,53 @@ code {
 #buttonBox {
   display: flex;
   justify-content: center;
- 
+
 }
 
-#googleChart{
+#googleChart {
   display: flex;
   justify-content: center;
- margin-left: 10%
+  margin-left: 10%
 }
 
+/*--------*/
+
+#ymw {
+  display: flex;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  margin-left: 6%;
+
+}
+
+#monthParentDiv{
+  display: flex;
+}
+
+
+#middleTopDiv{
+display: flex;
+width: 100%;
+justify-content: center;
+margin-top: 3%;
+}
+
+#middleBottomDiv{
+  margin-top: 1%;
+  width: 100%;
+}
+
+#bottomDiv{
+  height: 30vh;
+  display: flex;
+  justify-content: center;
+}
+
+#pieChartDiv{
+  display: flex;
+}
+
+#inOutDiv{
+  width: 30%;
+
+}

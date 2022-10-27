@@ -48,9 +48,9 @@ const useSelectlabels = ({ onChange }) => {
   }
 
   return (
-    <div>
+    <div id = "teamParentDiv">
       <center>
-        <FormControl sx={{ m: 2, minWidth: 100, width: 400 }}>
+        <FormControl sx={{ m: 2, minWidth: 200}}>
           <InputLabel id="team-selector" >Team</InputLabel>
           <Select
             labelId="team-selector"
@@ -77,12 +77,12 @@ const useSelectlabels = ({ onChange }) => {
             <MenuItem value={13}>Po</MenuItem>
           </Select>
         </FormControl>
-        <FormControl sx={{ m: 2, minWidth: 100, width: 400 }}>
+        <FormControl sx={{ m: 2, minWidth: 200}}>
           <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={listOfEmployees}
-            sx={{ width: 300 }}
+            sx={{ width: 200 }}
             renderInput={(params) => <TextField {...params} label="Employee" />}
             labelId="team-selector"
             onChange={handleChangeEmployee}

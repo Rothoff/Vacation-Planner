@@ -19,7 +19,6 @@ public class VacationPlannerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-
         String USERNAME = "frerot";
         String PASSWORD = "Fredde123!";
 

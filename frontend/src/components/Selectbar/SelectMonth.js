@@ -47,7 +47,6 @@ const SelectMonth = ({ onChange }) => {
                 array.push(i);
             }
             setWeeks(array);
-            console.log(array)
         }
         loadWeeks();
     }, []);
@@ -187,7 +186,7 @@ const SelectMonth = ({ onChange }) => {
 
 
     return (
-        <div id="parentDiv">
+        <div id="monthParentDiv">
             <div id="checkbox"><CheckBoxes /></div>
             <div id="ymw">
                 <div id="button" onClick={handleClickNegative}><IconButton><ArrowBackIcon /></IconButton></div>

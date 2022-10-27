@@ -60,9 +60,7 @@ function pieChart(props) {
         ["Vacation", vacDays],
     ];
     return (
-        <div class="pieChartDiv" >
-            <Chart chartType="PieChart" data={data} width={"80%"} height={"400px"} />
-        </div>
+            <Chart chartType="PieChart" data={data} width="100%" height="100%"/>
     )
 };
 export default pieChart;

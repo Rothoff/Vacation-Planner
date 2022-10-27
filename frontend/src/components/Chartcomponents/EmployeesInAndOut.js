@@ -179,8 +179,7 @@ export default function CustomizedTables(props) {
     return collection;
   })
   return (
-    <div className='center'>
-      <TableContainer component={Paper} sx={{ width: 500 }}>
+      <TableContainer component={Paper}>
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
@@ -202,6 +201,6 @@ export default function CustomizedTables(props) {
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+
   );
 }

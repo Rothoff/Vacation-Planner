@@ -28,12 +28,20 @@ const Dashboard = () => {
 
   return (
     <div className='dashboard'>
-      <StapleChart />
-      <Selectlabels onChange={onChangeSelection} />
-      <SelectMonth onChange={onChangeSelection2} />
-      <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} employeeName={employeeName} />
-      <PieChart week={weekId} team={team} month={month} vacDays={vacDays} />
-      <EmployeesInAndOut week={weekId} team={team}/>
+      <div id="topDiv">
+        <StapleChart onChange={onChangeSelection} team={team} />
+      </div>
+      <div id="middleTopDiv">
+        <Selectlabels onChange={onChangeSelection} />
+        <SelectMonth onChange={onChangeSelection2} />
+      </div>
+      <div id="middleBottomDiv">
+        <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} employeeName={employeeName} />
+      </div>
+      <div id="bottomDiv">
+      <div id="pieChartDiv"> <PieChart week={weekId} team={team} month={month} vacDays={vacDays} /></div>
+      <div id="inOutDiv"><EmployeesInAndOut week={weekId} team={team} /></div>
+      </div>
     </div>
 
   );
