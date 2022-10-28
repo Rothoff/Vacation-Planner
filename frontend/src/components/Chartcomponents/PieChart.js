@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "react-google-charts";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 function pieChart(props) {
     const { team, week, month, vacDays } = props;
@@ -29,12 +30,12 @@ function pieChart(props) {
 
 
 
-    if (week != null && month == null) {
+    if (week !== null && month === null) {
         var totalDaysForTeam = amountInTeam * Number(5);
-    } else if (month != null && week == null) {
+    } else if (month !== null && week === null) {
         var totalDaysOfMonth = daysInMonth(month, 2022)
         var totalDaysForTeam = amountInTeam * totalDaysOfMonth
-        console.log("month: ", totalDaysOfMonth);
+        
 
         function isWeekday(year, month, day) {
             var day = new Date(year, month, day).getDay();
@@ -50,6 +51,7 @@ function pieChart(props) {
             return weekdays;
         }
         totalDaysForTeam = amountInTeam * getWeekdaysInMonth((month - 1), 2022)
+       
     }
 
     var workDays = totalDaysForTeam - vacDays;

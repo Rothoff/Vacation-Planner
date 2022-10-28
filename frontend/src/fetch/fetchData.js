@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from 'react';
 
-//used in StapleChart
+//Returns all employees
+//[{"id","first_name","last_name","team":{"id","team_name"}}
 const fetchEmployees = () => {
     const [employeeData, setEmployeeData] = useState([]);
     useEffect(() => {
@@ -31,11 +32,8 @@ const fetchVacation = () => {
             }
             )
     }, [])
-
     return (
         vacationData
     );
-
 };
-
 export { fetchEmployees, fetchVacation }

@@ -35,7 +35,7 @@ const EmployeesOnVacation = (props) => {
   let filterResults = [];
 
 
-  //Should be moved out to seperate file. How?
+  //Should be moved out to seperate file?
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -45,7 +45,7 @@ const EmployeesOnVacation = (props) => {
       )
   }, [])
 
-   //Should be moved out to seperate file. How?
+   //Should be moved out to seperate file?
   useEffect(() => {
     fetch("http://localhost:8080/employee/all")
       .then(res => res.json())
@@ -83,9 +83,7 @@ const EmployeesOnVacation = (props) => {
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 7)
       let text = emps.text;
-
-    
-
+      
       //Checking user input
       if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
@@ -218,6 +216,7 @@ const EmployeesOnVacation = (props) => {
   useEffect(() => {
     if (weekId !== null && month === null) {
       collection.map(coll => {
+       if(!coll[1].includes("PO") && !coll[1].includes("Mngr")){
         var diffTime = Math.abs(coll[3] - coll[2]);
         var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diff === 7) {
@@ -226,11 +225,12 @@ const EmployeesOnVacation = (props) => {
           diff -= 2
         }
         daysDiff += diff
-      })
+      }})
       setVacDays(daysDiff)
       onChange(daysDiff)
     } else if (month !== null && weekId === null) {
       collection.map(coll => {
+        if(!coll[1].includes("PO")&&!coll[1].includes("Mngr")){
         var diffTime = Math.abs(coll[3] - coll[2]);
         var diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         if (diff === 7) {
@@ -239,13 +239,12 @@ const EmployeesOnVacation = (props) => {
           diff -= 2
         }
         daysDiff += diff
-      })
+      }})
       setVacDays(daysDiff)
       onChange(daysDiff)
     }
   }, [weekId, month]);
   //----------------PIE CHART-------------------
-
 
   return (
     <div id="parentChart">

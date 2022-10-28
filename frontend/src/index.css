@@ -77,16 +77,25 @@ margin-top: 3%;
 }
 
 #bottomDiv{
-  height: 30vh;
+  height: 50vh;
   display: flex;
-  justify-content: center;
+  width: 80%;
+  margin-left: 18vh;
+  position: absolute;
 }
 
 #pieChartDiv{
   display: flex;
+  width: 80%;
+  margin-left: 8vh;
 }
 
 #inOutDiv{
-  width: 30%;
+  width: 50%;
+  margin-right: 10vh;
+  margin-top: 10vh;
+}
 
+#dashboard{
+  position: relative;
 }

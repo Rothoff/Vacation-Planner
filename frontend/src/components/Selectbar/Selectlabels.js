@@ -13,7 +13,7 @@ const useSelectlabels = ({ onChange }) => {
   const [allEmployees, setAllEmployees] = useState([])
   const [employeeName, setEmployeeName] = useState ('');
   const listOfEmployees = [];
-  
+
 
   const handleChange = (event) => {
     setTeam(event.target.value);
@@ -35,7 +35,8 @@ const useSelectlabels = ({ onChange }) => {
       )
   }, [])
 
-  if (team !== "") {
+
+  if (team !== null) {
     allEmployees.map(employee => {
       if (employee.team.id === team) {
         listOfEmployees.push(employee.first_name + "" + employee.last_name)
@@ -55,11 +56,12 @@ const useSelectlabels = ({ onChange }) => {
           <Select
             labelId="team-selector"
             id="team-selector"
+            defaultValue={null}
             value={team}
             label="Team"
             onChange={handleChange}
           >
-            <MenuItem value="" className='center'>
+            <MenuItem value={null} className='center'>
               <em>None</em>
             </MenuItem>
             <MenuItem value={1}>Sipa</MenuItem>
@@ -82,7 +84,7 @@ const useSelectlabels = ({ onChange }) => {
             disablePortal
             id="combo-box-demo"
             options={listOfEmployees}
-            sx={{ width: 200 }}
+            sx={{ width: 250 }}
             renderInput={(params) => <TextField {...params} label="Employee" />}
             labelId="team-selector"
             onChange={handleChangeEmployee}

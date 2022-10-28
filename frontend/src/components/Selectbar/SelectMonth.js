@@ -23,7 +23,9 @@ const SelectMonth = ({ onChange }) => {
             if (checked2 == false) {
                 setWeek(null);
                 if (count == 13) {
-                    setCount(0);
+                    setCount(1);
+                } if (count == 0){
+                    setCount(12)
                 }
                 setMonth(count);
                 onChange(null, count);
@@ -31,7 +33,9 @@ const SelectMonth = ({ onChange }) => {
             } else if (checked1 == false) {
                 setMonth(null);
                 if (count == 22) {
-                    setCount(0)
+                    setCount(1)
+                }if (count == 0){
+                    setCount(21)
                 }
                 setWeek(count);
                 onChange(count, null);
