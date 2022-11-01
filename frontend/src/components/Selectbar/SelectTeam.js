@@ -8,7 +8,7 @@ import { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 
 
-const useSelectlabels = ({ onChange }) => {
+const selectTeam = ({ onChange }) => {
   const [team, setTeam] = useState('');
   const [allEmployees, setAllEmployees] = useState([])
   const [employeeName, setEmployeeName] = useState ('');
@@ -95,4 +95,4 @@ const useSelectlabels = ({ onChange }) => {
     </div>
   );
 }
-export default useSelectlabels;
+export default selectTeam;
