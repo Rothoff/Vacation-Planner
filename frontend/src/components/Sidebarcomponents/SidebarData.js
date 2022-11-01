@@ -21,19 +21,12 @@ export const SidebarData = [
 
   },
   {
-    title: 'Teams',
-    path: '/team',
+    title: 'Sprints',
+    path: '/sprintPlanner',
     icon: <IoIcons.IoMdPeople />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
-    subNav: [
-      {
-        title: 'Add Team',
-        path: '/team/addTeam',
-        icon: <IoIcons.IoIosPeople />,
-        cName: 'sub-nav'
-      },
-    ]
+    
   },
   {
     title: 'Support',
