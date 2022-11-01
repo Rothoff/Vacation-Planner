@@ -13,20 +13,12 @@ export const SidebarData = [
 
   },
   {
-    title: 'Employees',
-    path: '/employees',
+    title: 'MNGR/PO',
+    path: '/leaders',
     icon: <IoIcons.IoIosPerson />,
     iconClosed: <RiIcons.RiArrowDownSFill />,
     iconOpened: <RiIcons.RiArrowUpSFill />,
 
-    subNav: [
-      {
-        title: 'Add Employee',
-        path: '/employees/addEmployee',
-        icon: <IoIcons.IoIosPersonAdd />,
-        cName: 'sub-nav'
-      },
-    ]
   },
   {
     title: 'Teams',

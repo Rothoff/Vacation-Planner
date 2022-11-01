@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Chart } from "react-google-charts";
 //imports from fetch file
-import { fetchEmployees, fetchVacation } from "/Users/erihol/Desktop/VPT-Repo/VacationPlanner/frontend/src/fetch/fetchData.js";
 
 export const getSundayFromWeekNum = (weekNum, year) => {
   const sunday = new Date(year, 0, (1 + (weekNum + 1) * 7));
