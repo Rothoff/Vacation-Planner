@@ -9,8 +9,9 @@ export const SprintPlanner= () => {
   const [clicked, setClicked] = useState(null);
   
   const onClickSelection = (clicked) => {
-    setClicked(clicked);
+    setClicked(Number(clicked));
   }
+
   
     return (
       <div id="sprint-container">

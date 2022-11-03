@@ -217,5 +217,18 @@ abbr[title] {
 #sprint-mid{
   display: flex;
   align-items: center;
-  flex-direction: row;
+  flex-direction: column;
 }
+
+#sprint-calender-select{
+  display: flex;
+  flex-direction: row;
+
+}
+
+#team-employee-add-column{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+

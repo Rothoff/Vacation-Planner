@@ -3,8 +3,17 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { useState, useEffect } from 'react';
 
-export default function OutlinedButtons() {
-    const [clicked, setClicked] = useState([])
+const OutlinedButtons = ({ onClick }) =>  {
+    const [clicked, setClicked] = useState(null)
+
+    console.log("from selectButtons:", clicked)
+
+
+
+    const handleClick = (event) => {
+        setClicked(event.target.value);
+        onClick(event.target.value)
+      };
 
 
     return (
@@ -12,21 +21,23 @@ export default function OutlinedButtons() {
             <Button
                 variant="contained"
                 color="success"
-                onClick={() => {
-                    setClicked(1);   
-                }}
+                value="1"
+                onClick={handleClick}
+
             >
                 Show sprints
             </Button>
             <Button
                 variant="contained"
                 color="success"
-                onClick={() => {
-                    setClicked(2);
-                }}
+                value="2"
+                onClick={handleClick}
+    
+
             >
                 Create sprint
             </Button>
         </Stack>
     );
-}
+} 
+export default OutlinedButtons;

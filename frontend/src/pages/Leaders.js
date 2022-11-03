@@ -1,5 +1,5 @@
 import React from 'react';
-import Mngrtable from '../components/ChartComponents/MngrTable';
+import MngrTable from '../components/ChartComponents/MngrTable';
 import Potable from '../components/ChartComponents/PoTable';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -19,7 +19,7 @@ export const Leaders = () => {
     <Grid container boxShadow={'100px'} width={'80%'} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
     <Grid xs={6}>
       
-      <Item> <h1 className='center'>Manager</h1><Mngrtable/></Item>
+      <Item> <h1 className='center'>Manager</h1><MngrTable/></Item>
     </Grid>
     <Grid xs={6}>
     <Item> <h1 className='center'>Product Owner</h1><Potable/></Item>
