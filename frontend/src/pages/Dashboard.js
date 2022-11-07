@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import StapleChart from '../components/ChartComponents/StapleChart';
+import StapleChart from '../components/Chartcomponents/StapleChart';
 import Selectlabels from '../components/Selectbar/SelectTeam';
-import EmployeesOnVacation from '../components/ChartComponents/VacationCalendar'
+import EmployeesOnVacation from '../components/Chartcomponents/VacationCalendar'
 import SelectMonth from '../components/Selectbar/SelectMonth';
-import PieChart from '../components/ChartComponents/PieChart';
-import EmployeesInAndOut from '../components/ChartComponents/EmployeesInAndOut'
+import PieChart from '../components/Chartcomponents/PieChart';
+import EmployeesInAndOut from '../components/Chartcomponents/EmployeesInAndOut'
 
 
 const Dashboard = () => {
