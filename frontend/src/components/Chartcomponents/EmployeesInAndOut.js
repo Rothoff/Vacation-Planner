@@ -66,7 +66,7 @@ export default function CustomizedTables(props) {
   function employeesOnvacationInTeam(weekID, teamID) {
     const employeesOnVacation = [];
     employeesOnVacation.map(employeesOnVacationFullWeek => {
-      if (employeesOnVacationFullWeek.week.id === weekID && employeesOnVacationFullWeek.employee.team.id === teamID && (employeesOnVacationFullWeek.textCollumnInTable.includes("x") || employeesOnVacationFullWeek.textCollumnInTable.includes("X"))) {
+      if (employeesOnVacationFullWeek.week.id === weekID && employeesOnVacationFullWeek.employee.team.id === teamID && (employeesOnVacationFullWeek.textColumnInTable.includes("x") || employeesOnVacationFullWeek.textColumnInTable.includes("X"))) {
         employeesOnVacation.push(employeesOnVacationFullWeek.employee.first_name + employeesOnVacationFullWeek.employee.last_name)
       }
     })
@@ -90,16 +90,16 @@ export default function CustomizedTables(props) {
 
 
   employeesOnVacation.map(employeesInVacationTable => {
-    var textCollumnInTable = employeesInVacationTable.textCollumnInTable;
+    var textColumnInTable = employeesInVacationTable.text;
     const sunday = getSundayFromWeekNum(employeesInVacationTable.week.week_number, 2022);
     sunday.setDate(sunday.getDate() + 1)
     const monday = new Date(sunday);
     monday.setDate(monday.getDate() - 7)
     if (employeesInVacationTable.week.id === week && employeesInVacationTable.employee.team.id === team) {
-      if ((!textCollumnInTable.includes("x") && !textCollumnInTable.includes("X")) && !textCollumnInTable.includes("Mngr") && !textCollumnInTable.includes("mngr") && !textCollumnInTable.includes("PO")) {
-        if (textCollumnInTable.includes("-") || textCollumnInTable.includes(",") || textCollumnInTable.includes(":e") || textCollumnInTable.includes("?") || textCollumnInTable.includes(" ")) {
-          const splitFirstDate = textCollumnInTable.split(/[-,:e?" "]/)[0]
-          const splitSecondDate = textCollumnInTable.split(/[-,:e?" "]/).pop()
+      if ((!textColumnInTable.includes("x") && !textColumnInTable.includes("X")) && !textColumnInTable.includes("Mngr") && !textColumnInTable.includes("mngr") && !textColumnInTable.includes("PO")) {
+        if (textColumnInTable.includes("-") || textColumnInTable.includes(",") || textColumnInTable.includes(":e") || textColumnInTable.includes("?") || textColumnInTable.includes(" ")) {
+          const splitFirstDate = textColumnInTable.split(/[-,:e?" "]/)[0]
+          const splitSecondDate = textColumnInTable.split(/[-,:e?" "]/).pop()
           monthOnVacation = getSundayFromWeekNum((week + 14), 2022);
           var satDate = new Date(2022, (monthOnVacation.getMonth()), (monthOnVacation.getDate() - 1))
           var saturday = satDate.getFullYear() + "-" + (satDate.getMonth()) + "-" + satDate.getDate();
@@ -129,10 +129,10 @@ export default function CustomizedTables(props) {
           }
         } else {
           monthOnVacation = getSundayFromWeekNum((week + 14), 2022);
-          dayOnVacation = new Date(getDateOfWeek((week + 15), 2022, textCollumnInTable));
+          dayOnVacation = new Date(getDateOfWeek((week + 15), 2022, textColumnInTable));
           satDate = new Date(2022, (monthOnVacation.getMonth()), (monthOnVacation.getDate() - 1))
           saturday = satDate.getFullYear() + "-" + (satDate.getMonth() + 1) + "-" + satDate.getDate();
-          dayBackFromVacation = new Date(getDateOfWeek((week + 15), 2022, (textCollumnInTable + 1)));
+          dayBackFromVacation = new Date(getDateOfWeek((week + 15), 2022, (textColumnInTable + 1)));
           dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
           dateBackFromVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + (dayOnVacation.getDate() + 1);
           if (dateBackFromVacation === saturday) {
@@ -142,7 +142,7 @@ export default function CustomizedTables(props) {
             collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [backFromVacation], [dateBackFromVacation]))
           }
         }
-      } else if ((textCollumnInTable.includes("x") || textCollumnInTable.includes("X")) && !textCollumnInTable.includes("Mngr") && !textCollumnInTable.includes("mngr") && !textCollumnInTable.includes("PO")) {
+      } else if ((textColumnInTable.includes("x") || textColumnInTable.includes("X")) && !textColumnInTable.includes("Mngr") && !textColumnInTable.includes("mngr") && !textColumnInTable.includes("PO")) {
         if (week === 1) {
           const sunday = getSundayFromWeekNum((week + 14), 2022);
           const monday = new Date(sunday);
