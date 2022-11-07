@@ -14,34 +14,38 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Checkbox from '@mui/material/Checkbox';
+import { width } from '@mui/system';
+import { Mp } from '@mui/icons-material';
 
 
-function createData(name, capacity, team, vacDays, workDays, schedule) {
+
+function createData(sprint, date, totalCapacity) {
     return {
-        name,
-        team,
-        capacity,
-        vacDays,
-        workDays,
-        schedule,
-        history: [
-            {
-
-            },
-            {
-
-            },
-        ],
+        sprint, date, totalCapacity,
     };
 }
+
+function empListsData(employeeName, employeeCapacity){
+    return {employeeName, employeeCapacity}
+}
+
+
+
 
 function Row(props) {
     const { row } = props;
     const [open, setOpen] = React.useState(false);
 
-
-
     const [checked, setChecked] = React.useState(false);
+
+    const empli = [
+        empListsData('Fredrik', '80%'),
+        empListsData('Erik', '40%'),
+        empListsData('Albin', '20%'),
+        empListsData('Sara', '95%')
+    ]
+
+
 
     const handleChange = (event) => {
         setChecked(event.target.checked);
@@ -62,35 +66,35 @@ function Row(props) {
                   
                 </TableCell>
                 <TableCell component="th" scope="row">
-                    {row.name}
+                    {row.sprint}
                 </TableCell>
-                <TableCell align="right">{row.team}</TableCell>
-                <TableCell align="right">{row.capacity}</TableCell>
-
+                <TableCell align="center">{row.date}</TableCell>
+                <TableCell align="center">{row.totalCapacity}</TableCell>
             </TableRow>
             <TableRow>
-                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={3}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h8" gutterBottom component="div">
-                                Schedule
+                            <Typography variant="h6" gutterBottom component="div">
+                                Sprint 1 Details
                             </Typography>
                             <Table size="small" aria-label="purchases">
-                                <TableHead>
-
-                                </TableHead>
+                                <TableHead align="left"></TableHead>
                                 <TableBody>
-
+                              
                                     <TableRow>
-                                        <TableCell> {row.schedule} </TableCell>
+                             
+                                        <TableCell>Name</TableCell>
+                                        <TableCell>Capacity</TableCell>
+                                        </TableRow>  
+                                        {empli.map(mp => (
+                                        <TableRow> 
+                                        <TableCell align="left">{mp.employeeName}</TableCell>
+                                        <TableCell align="left">{mp.employeeCapacity}</TableCell>   
                                     </TableRow>
-                                    <TableRow>
-                                        <TableCell align="right">{row.workDays}</TableCell>
-                                        <TableCell align="right">{row.vacDays}</TableCell>
-
-                                    </TableRow>
-
+                                    ))}
                                 </TableBody>
+                           
                             </Table>
                         </Box>
                     </Collapse>
@@ -101,30 +105,32 @@ function Row(props) {
 }
 
 
+
+
+
 const rows = [
-    createData('Sprint 1', 50, 'Team1', "vacation: " + 5, "work: " + 5),
-    createData('Sprint 2', 100, 'Team1', "vacation: " + 0, "work:" + 10),
-    createData('Sprint 3', 100, 'Team1', "vacation: " + 0, "work:" + 10),
-    createData('Sprint 4', 100, 'Team2', "vacation: " + 0, "work:" + 10),
-    createData('Sprint 5', 100, 'Team2', "vacation: " + 0, "work:" + 10),
+    createData('1', '1 Aug - 14 Aug', '90%'),
+    createData('2', '15 Aug - 31 Aug', '90%'),
+    createData('3', '1 Sep - 14 Sep', '80%'),
+    createData('4', '15 Sep - 30 Sep', '60%' )
 ];
 
 export default function CollapsibleTable() {
     return (
-        <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
+        <TableContainer sx={{width:'1000px'}} component={Paper} >
+            <Table  aria-label="collapsible table">
                 <TableHead>
                     <TableRow>
                        
                        <TableCell></TableCell>
-                        <TableCell> Name</TableCell>
-                        <TableCell align="right">Team</TableCell>
-                        <TableCell align="right">Capacity</TableCell>
+                        <TableCell>Sprint</TableCell>
+                        <TableCell align="center">Dates</TableCell>
+                        <TableCell align="center">Capacity</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {rows.map((row) => (
-                        <Row key={row.name} row={row} />
+                        <Row key={row.sprint} row={row}/>
                     ))}
                 </TableBody>
             </Table>

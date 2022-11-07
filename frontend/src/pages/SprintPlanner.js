@@ -18,7 +18,9 @@ export const SprintPlanner= () => {
         <h1>SPRINT PLANNER</h1>
       <SelectButtons onClick={onClickSelection} />
       <CreateSprint clicked={clicked}/>
+     
      </div>
+     
     );
   
   };
