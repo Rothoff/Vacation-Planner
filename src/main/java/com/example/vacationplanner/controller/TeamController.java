@@ -29,6 +29,4 @@ public class TeamController {
         return json;
 
     }
-
-
 }

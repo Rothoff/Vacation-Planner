@@ -20,12 +20,12 @@ public class HTMLunitClient {
     private final String username;
     private final String password;
 
-    //Our constructor. Sets our username and password and does some client config.
+    //Constructor. Sets username and password and does some client config.
     public HTMLunitClient(String username, String password) {
         this.username = username;
         this.password = password;
 
-        //Retreives our WebClient's cookie manager and enables cookies.
+        //enables cookies.
         WEB_CLIENT.getCookieManager().setCookiesEnabled(true);
     }
 
@@ -33,7 +33,6 @@ public class HTMLunitClient {
 
         String loginURL = "https://confluence.services.kambi.com/login.action?logout=true";
         try {
-
             //Create an HtmlPage and get the login page.
             WEB_CLIENT.getOptions().setUseInsecureSSL(true);
 
@@ -47,14 +46,10 @@ public class HTMLunitClient {
             HtmlPage loginPage = WEB_CLIENT.getPage(loginURL);
             HtmlForm loginForm = loginPage.getFormByName("loginform");
 
-            //This is where we modify the form. The getInputByName method looks
-            //for an <input> tag with some name attribute. For example, user or passwd.
-
             // "Find the <input> tags with the names "user" and "passwd"
             //and throw in our username and password in the text fields.
             loginForm.getInputByName("os_username").setValueAttribute(username);
             loginForm.getInputByName("os_password").setValueAttribute(password);
-
 
             loginForm.getInputByName("login").click();
             //loginForm.getElementsByTagName("button").get(0).click();

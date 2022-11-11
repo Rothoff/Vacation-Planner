@@ -1,15 +1,30 @@
-
 import React, { useState, useEffect } from 'react';
+import { json } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
 function StapleChart(props) {
-  const [teamsData, setTeamsData] = useState([]);
   const [teamName, setTeamName] = useState([]);
   const [stapleData, setStapleData] = useState([]);
   const [biggestNumber, setBiggestNumber] = useState("")
   const { team } = props;
+  const [weeks, setWeeks] = useState([]);
+  const [teamsData, setTeamsData] = useState([]);
   let pickedTeam = "";
+  let teamNameList = []
+  let finalStapleData = [];
+
+  console.log("TEAM: ", team);
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+
+    }
+    return color;
+  }
 
   useEffect(() => {
     fetch("http://localhost:8080/teams")
@@ -20,70 +35,89 @@ function StapleChart(props) {
       )
   }, [])
 
+
+  useEffect(() => {
+    fetch("http://localhost:8080/weeks")
+      .then(res => res.json())
+      .then((weeksResult) => {
+        setWeeks(weeksResult);
+      }
+      )
+  }, [])
+
+
+
   if (team !== null) {
-    pickedTeam = teamName[team - 1].team_name
+    pickedTeam = teamName[team-1].team_name;
   }
+
+  teamName.map(teamN => {
+    teamNameList.push(teamN.team_name)
+  })
+
+  let myList = []
 
   useEffect(() => {
     async function teamVacationData() {
-      const response = await fetch("http://localhost:8080/vacation/2");
+      const response = await fetch("http://localhost:8080/vacation/empsonvacperweek");
       const teams = await response.json();
       let weekNr = 15;
       let nr = team
       setTeamsData(teams);
+      let jsonString="";
+      let finalList = []
 
       if (team !== null) {
         setStapleData([])
-        for (let i = 0; i < 21; i++) {
+        for (let week = 0; week < weeks.length; week++) {
           setStapleData(teamsData => teamsData.concat(
             {
-              name: weekNr++,
-              yAxis: 10,
-              [pickedTeam]: teams[i][team - 1],
-
+              name: weeks[week].week_number,
+              yAxis: biggestNumber,
+              [pickedTeam]: teams[week][team - 1],
             },))
         }
-      } else {
-        setStapleData([])
-        for (let i = 0; i < 21; i++) {
-          setStapleData(teamsData => teamsData.concat([
-            {
-              name: weekNr++,
-              yAxis: biggestNumber,
-              Sipa: teams[i][0],
-              Wild: teams[i][1],
-              EM: teams[i][2],
-              Arch: teams[i][3],
-              Bull: teams[i][4],
-              Hos: teams[i][5],
-              Gama: teams[i][6],
-              Jazz: teams[i][7],
-              HoPD: teams[i][8],
-              Best: teams[i][9],
-              Wolf: teams[i][10],
-              Edge: teams[i][11],
-              PO: teams[i][12],
-            },]))
 
+      } else {
+      
+        for (let week = 0; week < weeks.length; week++) {
+          myList.push([])
+         
+          for (let team = 0; team < teamNameList.length; team++){
+            jsonString += '"'+teamNameList[team]+'"'+':'+teamsData[week][team]+', '
+          }
+          myList[week].push(jsonString)
+          jsonString = "";
+          finalStapleData.push([
+            '"name"'+':' + (weeks[week].week_number) + ', ' +
+            '"yAxis"'+':' + biggestNumber+ ', ', 
+          ])
+
+       let word = myList[week];
+       let word2 =finalStapleData[week];
+      
+       let word3 = "{" + word2 + word + "}";
+       let word4 = (word3.slice(0, -3)+ '}');
+       let myJson = JSON.parse(word4)
+
+       finalList.push(myJson);
+
+       setStapleData(finalList)
         }
       }
     }
     teamVacationData();
   }, [team, biggestNumber]);
 
-
-  
   let currentNumber = 0;
 
   //Setting height for y-axis of barchart based on "biggest" vacation week
-  for (let i = 0; i < teamsData.length; i++){
+  for (let i = 0; i < teamsData.length; i++) {
     currentNumber = teamsData[i].reduce((partialSum, a) => partialSum + a, 0);
-    if(currentNumber > biggestNumber){
+    if (currentNumber > biggestNumber) {
       setBiggestNumber(currentNumber);
     }
   }
- 
-
 
   return (
     <div class="center">
@@ -104,19 +138,9 @@ function StapleChart(props) {
           <YAxis dataKey="yAxis" />
           <Tooltip />
           <Legend />
-          <Bar dataKey="Sipa" stackId="a" fill="#66ACFA" />
-          <Bar dataKey="Wild" stackId="a" fill="#92CAFF" />
-          <Bar dataKey="EM" stackId="a" fill="#82ca9d" />
-          <Bar dataKey="Arch" stackId="a" fill="#ffc658" />
-          <Bar dataKey="Bull" stackId="a" fill="#3D4A81" />
-          <Bar dataKey="HoS" stackId="a" fill="aqua" />
-          <Bar dataKey="Gama" stackId="a" fill="#FFE5AE" />
-          <Bar dataKey="Jazz" stackId="a" fill="#FADE7D" />
-          <Bar dataKey="HoPD" stackId="a" fill="purple" />
-          <Bar dataKey="Best" stackId="a" fill="#FF62A5" />
-          <Bar dataKey="Wolf" stackId="a" fill="blue" />
-          <Bar dataKey="Edge" stackId="a" fill="cyan" />
-          <Bar dataKey="PO" stackId="a" fill="#3e9399" />
+          {teamName.map(teamName=>(
+            <Bar dataKey={teamName.team_name} stackId="a" fill={getRandomColor()} />
+          ))}
         </BarChart>
       </ResponsiveContainer>
     </div>

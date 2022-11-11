@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import { Route } from 'react-router-dom';
-import Sidebar from './components/Sidebarcomponents/Sidebar';
+import Sidebar from './components/SidebarComponents/Sidebar';
 import { BrowserRouter, Routes} from "react-router-dom";
 import Dashboard from './pages/Dashboard';
 import { Leaders } from './pages/Leaders';

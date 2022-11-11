@@ -7,6 +7,7 @@ import com.example.vacationplanner.model.Vacation;
 import com.example.vacationplanner.repository.EmployeeRepository;
 import com.example.vacationplanner.repository.TeamRepository;
 import com.example.vacationplanner.repository.VacationRepository;
+import com.example.vacationplanner.repository.WeekRepository;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import org.jooq.tools.json.JSONArray;
@@ -32,12 +33,13 @@ public class VacationController {
 
     @Autowired
     private VacationRepository vacationRepository;
-
     @Autowired
     private TeamRepository teamRepository;
-
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private WeekRepository weekRepository;
 
     @GetMapping("/all")
     public Iterable<Vacation> findAll() {
@@ -45,13 +47,15 @@ public class VacationController {
     }
 
     //TODO change api call name
-    @GetMapping("/2")
-    public String findAllv() {
-        List<Integer>[] arr = new ArrayList[21];
+    @GetMapping("/empsonvacperweek")
+    public String empsOnVacPerWeek() {
+        int numberOfWeeks = weekRepository.findAll().size();
+        int numberOfTeams = teamRepository.findAll().size();
+        List<Integer>[] arr = new ArrayList[numberOfWeeks];
         int teamMOnVacation = 0;
-        for (int week = 0; week < 21; week++) {
+        for (int week = 0; week < numberOfWeeks; week++) {
             List<Integer> intlist = new ArrayList<>();
-            for (int team = 0; team< 13; team++) {
+            for (int team = 0; team< numberOfTeams; team++) {
                 for (Vacation v : vacationRepository.findAll()) {
                     if (v.getWeek().getId() == week + 1 && v.getEmployee().getTeam().getId() == team + 1 && v.getText()!=("") && !v.getText().equalsIgnoreCase("Mngr") && !v.getText().equalsIgnoreCase("PO")){
                         teamMOnVacation++;

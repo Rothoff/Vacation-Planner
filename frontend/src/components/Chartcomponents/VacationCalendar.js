@@ -33,6 +33,7 @@ const EmployeesOnVacation = (props) => {
   const { onChange } = props;
   let filterResults = [];
 
+  
 
   //Should be moved out to seperate file?
   useEffect(() => {
@@ -74,15 +75,25 @@ const EmployeesOnVacation = (props) => {
 
   // First row doesnt show for some reason, so we need to push an empty row
   collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
-
+  let year = (new Date().getFullYear())
   {
     results.map(emps => {
-      const sunday = getSundayFromWeekNum(emps.week.week_number, 2022);
+      
+      console.log(year)
+      const sunday = getSundayFromWeekNum(emps.week.week_number, year);
       sunday.setDate(sunday.getDate() + 1)
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 7)
       let text = emps.text;
-      
+      console.log("SUNDAY DATE:", sunday)
+      console.log("monday DATE", monday)
+      if(sunday.getMonth()<monday.getMonth()){
+        sunday.setDate(getSundayFromWeekNum(emps.week.week_number,year+1))
+        year+=1;
+      }else{
+        year = (new Date().getFullYear())
+      }
+
       //Checking user input
       if (!text.includes(",") && !text.includes("-") && !text.includes("Mngr") && !text.includes("PO")) {
         if (isNaN(text)) {
@@ -94,7 +105,7 @@ const EmployeesOnVacation = (props) => {
         } else {
           monday.setDate(text) //first date = user input
           sunday.setDate(monday.getDate() + 1) //second date is the next day
-          if (sunday.getDate() < 6) { //if this weeks sundays date is < 6, sunday is next month (correct month)
+          if (sunday.getDate() < 6 ) { //if this weeks sundays date is < 6, sunday is next month (correct month)
             monday.setMonth(sunday.getMonth()) //Thats why we have to set mondays (firstdate) month to the correct month
           } else { // otherwise mondays month is correct
             sunday.setMonth(monday.getMonth()) 
@@ -161,7 +172,8 @@ const EmployeesOnVacation = (props) => {
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
 
       }
-    })
+    }
+    )
 
     //array with all employees in {team}
     allEmployeesResult.map(emp => {
@@ -178,7 +190,8 @@ const EmployeesOnVacation = (props) => {
 
     //pushing employees that or not on vacation to google calendar to "hold up" whole week and month
     if (weekId !== null) {
-      var lastDay = getSundayFromWeekNum((weekId + 14), 2022);
+      let year = (new Date().getFullYear())
+      var lastDay = getSundayFromWeekNum((weekId), year);
       lastDay.setDate(lastDay.getDate() + 1)
       var firstDay = new Date(lastDay);
       firstDay.setDate(firstDay.getDate() - 7)
@@ -187,8 +200,8 @@ const EmployeesOnVacation = (props) => {
         collection.push([emp, "", lastDay, lastDay])
       })
       if (employeeName !== null) { //pushing empty row for employee filter to "hold up" week
-        collection.push(["Week: " + (weekId + Number(14)), "", firstDay, firstDay])
-        collection.push(["Week: " + (weekId + Number(14)), "", lastDay, lastDay])
+        collection.push(["Week: " + (weekId), "", firstDay, firstDay])
+        collection.push(["Week: " + (weekId), "", lastDay, lastDay])
       }
     } else if (month !== null) {
       var date = new Date();

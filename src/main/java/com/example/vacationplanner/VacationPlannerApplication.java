@@ -1,5 +1,6 @@
 package com.example.vacationplanner;
 
+import com.example.vacationplanner.database.DataToDatabase;
 import webScraper.HTMLunitClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,23 +20,27 @@ public class VacationPlannerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        String USERNAME = "frerot";
-        String PASSWORD = "Fredde123!";
+        String USERNAME = "erihol";
+        String PASSWORD = "Apelsin22";
 
         HTMLunitClient client = new HTMLunitClient(USERNAME, PASSWORD);
         client.login();
 
        String page = client.get("https://confluence.services.kambi.com/display/BOS/Vacation+Bet+Offer+Stream");
 
-/*
+
         DataToDatabase dbc = new DataToDatabase();
         dbc.resetAllTables(jdbcTemplate);
-        dbc.weekDataToDatabase(jdbcTemplate, page);
-        dbc.TeamDataToDatabase(jdbcTemplate,page);
-        dbc.employeeDataToDatabase(jdbcTemplate,page);
-        dbc.vacactionDataToDataBase(jdbcTemplate,page);
+        dbc.weekDataToDatabase(jdbcTemplate, page, dbc.numberOfColumns(page));
+        dbc.teamDataToDatabase(jdbcTemplate,page, dbc.numberOfRows(page));
+        dbc.employeeDataToDatabase(jdbcTemplate,page, dbc.numberOfRows(page));
+        dbc.vacationDataToDataBase(jdbcTemplate,page, dbc.numberOfColumns(page), dbc.numberOfRows(page));
+        dbc.numberOfRows(page);
 
- */
+        System.out.println("number of TBodys: " + dbc.numberOfTbodys(page));
+        System.out.println("number of Rows:" + dbc.numberOfRows(page));
+        System.out.println("number of Columns" + dbc.numberOfColumns(page));
+
     }
 }
 

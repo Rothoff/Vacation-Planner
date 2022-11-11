@@ -9,15 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import ButtonGroup from '@mui/material/ButtonGroup';
-
 const SelectMonth = ({ onChange }) => {
-
     const [count, setCount] = useState(null);
     const [month, setMonth] = useState('');
     const [week, setWeek] = useState('');
-    const [weeks, setWeeks] = useState([])
-
-
+    const [weekNr, setWeekNr] = useState([]); 
     useEffect(() => {
         function triggerOnChange() {
             if (checked2 == false) {
@@ -43,46 +39,28 @@ const SelectMonth = ({ onChange }) => {
         }
         triggerOnChange();
     }, [count])
-
-    useEffect(() => {
-        function loadWeeks() {
-            const array = [];
-            for (let i = 15; i < 33; i++) {
-                array.push(i);
-            }
-            setWeeks(array);
-        }
-        loadWeeks();
-    }, []);
-
+    
     const handleClickPositive = () => {
         setCount(count + 1);
     };
     const handleClickNegative = () => {
         setCount(count - 1);
     };
-
-
     const [checked1, setChecked1] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
-
     const onWeekSelection = (event) => {
         setWeek(event.target.value)
         setCount(event.target.value)
     }
-
     const onMonthSelection = (event) => {
         setMonth(event.target.value)
         setCount(event.target.value)
     }
-
-
     const toggleCheckBox = event => {
         setChecked1(event.target.checked1)
         setChecked2(false)
         return checked1
     }
-
     const toggleCheckBox2 = event => {
         setChecked2(event.target.checked2)
         setChecked1(false)
@@ -92,10 +70,17 @@ const SelectMonth = ({ onChange }) => {
         setChecked2(false)
         setChecked1(false)
     }
-
+    useEffect(() => {
+        fetch("http://localhost:8080/weeks")
+          .then(res => res.json())
+          .then((weekResult) => {
+            setWeekNr(weekResult);
+          }
+          )
+      }, [])
     function CheckBoxes() {
+        
         return (
-
             <div id="buttonBox">
                 <ButtonGroup variant="text" aria-label="text button group">
                     <Button
@@ -114,7 +99,6 @@ const SelectMonth = ({ onChange }) => {
                         id="CheckYear"
                     >Year</Button>
                 </ButtonGroup>
-
             </div>
         );
     }
@@ -147,6 +131,7 @@ const SelectMonth = ({ onChange }) => {
                 </FormControl>
             );
         } else if (checked1 == false) {
+           
             return (
                 <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
                     <InputLabel id="demo-select-small">Weeks</InputLabel>
@@ -158,27 +143,9 @@ const SelectMonth = ({ onChange }) => {
                         onChange={onWeekSelection}
                     >
                         <MenuItem value={null}><em>None</em></MenuItem>
-                        <MenuItem value={1}>15</MenuItem>
-                        <MenuItem value={2}>16</MenuItem>
-                        <MenuItem value={3}>17</MenuItem>
-                        <MenuItem value={4}>18</MenuItem>
-                        <MenuItem value={5}>19</MenuItem>
-                        <MenuItem value={6}>20</MenuItem>
-                        <MenuItem value={7}>21</MenuItem>
-                        <MenuItem value={8}>22</MenuItem>
-                        <MenuItem value={9}>23</MenuItem>
-                        <MenuItem value={10}>24</MenuItem>
-                        <MenuItem value={11}>25</MenuItem>
-                        <MenuItem value={12}>26</MenuItem>
-                        <MenuItem value={13}>27</MenuItem>
-                        <MenuItem value={14}>28</MenuItem>
-                        <MenuItem value={15}>29</MenuItem>
-                        <MenuItem value={16}>30</MenuItem>
-                        <MenuItem value={17}>31</MenuItem>
-                        <MenuItem value={18}>32</MenuItem>
-                        <MenuItem value={19}>33</MenuItem>
-                        <MenuItem value={20}>34</MenuItem>
-                        <MenuItem value={21}>35</MenuItem>
+                        {weekNr.map(week =>(
+                             <MenuItem value={week.week_number}>{week.week_number}</MenuItem>
+                            ))}
                     </Select>
                 </FormControl>
             );
@@ -187,8 +154,6 @@ const SelectMonth = ({ onChange }) => {
             setWeek(null);
         }
     }
-
-
     return (
         <div id="monthParentDiv">
             <div id="checkbox"><CheckBoxes /></div>
@@ -198,8 +163,6 @@ const SelectMonth = ({ onChange }) => {
                 <div id="button" onClick={handleClickPositive}> <IconButton><ArrowForwardIcon /></IconButton>  </div>
             </div>
         </div>
-
     );
-
 }
 export default SelectMonth;

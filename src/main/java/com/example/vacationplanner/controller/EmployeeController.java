@@ -27,13 +27,8 @@ public class EmployeeController {
         return employeeRepo.findAll();
     }
 
-    @GetMapping("/all/{teamId}")
-    public String findByTeamIdTeam(@PathVariable("teamId") int teamId) {
-        return employeeRepo.findAll().get(teamId).getTeam().getTeam_name();
-    }
-
-    @GetMapping("/empsteam")
-    public List empsPerTeam() {
+    @GetMapping("/teamsize")
+    public List teamSize() {
         ArrayList list = new ArrayList<>();
         int count = 0;
         for (int team = 0; team < 13; team++) {

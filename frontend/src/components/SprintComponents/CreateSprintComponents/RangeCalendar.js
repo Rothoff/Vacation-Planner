@@ -3,8 +3,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 
 function RangeCalendar() {
-    const [date, setDate] = useState(new Date());
-   
+    const [date, setDate] = useState(new Date()); 
+    
     return (
       <div className='app'>
         <div className='calendar-container'>
