@@ -18,6 +18,17 @@ export const getSundayFromWeekNum = (weekNum, year) => {
   return sunday;
 }
 
+export const getFridayFromWeekNum = (weekNum, year) => {
+  const friday = new Date(year, 0, (1 + (weekNum ) * 7));
+  while (friday.getDay() !== 5) {
+    friday.setDate(friday.getDate() - 1);
+  }
+  return friday;
+}
+
+console.log(getFridayFromWeekNum(51,2022))
+
+
 function getDateOfWeek(w, y, d) {
   let date = new Date(y, 0, (1 + (w - 1) * 7)); // Elle's method
   date.setDate(d); // 0 - Sunday, 1 - Monday etc
@@ -46,12 +57,15 @@ function createData(name, inOrOut, date) {
   return { name, inOrOut, date };
 }
 export default function CustomizedTables(props) {
+  var year = new Date().getFullYear();
   const { team } = props;
   const { week } = props;
   let backFromVacation = <WestIcon sx={{ color: 'blue' }} />
   let goingOnVacation = <EastIcon sx={{ color: 'red' }} />
   const [employeesOnVacation, setEmployeesOnVacation] = useState([]);
   const collection = [];
+
+
 
 
   useEffect(() => {
@@ -64,19 +78,20 @@ export default function CustomizedTables(props) {
   }, [])
 
   function employeesOnvacationInTeam(weekID, teamID) {
-    const employeesOnVacation = [];
+    const empsOnVacation = [];
     employeesOnVacation.map(employeesOnVacationFullWeek => {
-      if (employeesOnVacationFullWeek.week.id === weekID && employeesOnVacationFullWeek.employee.team.id === teamID && (employeesOnVacationFullWeek.textColumnInTable.includes("x") || employeesOnVacationFullWeek.textColumnInTable.includes("X"))) {
-        employeesOnVacation.push(employeesOnVacationFullWeek.employee.first_name + employeesOnVacationFullWeek.employee.last_name)
+      if (employeesOnVacationFullWeek.week_number === weekID && employeesOnVacationFullWeek.employee.team.id === teamID && (employeesOnVacationFullWeek.text.includes("x") || employeesOnVacationFullWeek.text.includes("X"))) {
+        empsOnVacation.push([employeesOnVacationFullWeek.employee.first_name + employeesOnVacationFullWeek.employee.last_name])
       }
     })
-    return employeesOnVacation;
+    return empsOnVacation;
   }
 
-  function employeesOnVacationLastWeek(teamID, weekId) {
-    const names = employeesOnvacationInTeam((weekId - 1), teamID).filter(item => !employeesOnvacationInTeam(weekId, teamID).includes(item))
+  function employeesOnVacationLastWeek(teamID, weekNumber) {
+    const names = employeesOnvacationInTeam((weekNumber - 1), teamID).filter(item => !employeesOnvacationInTeam(weekNumber, teamID).includes(item))
     return names;
   }
+
 
   function employeesOnVacationNextWeek(teamID, weekId) {
     const names = employeesOnvacationInTeam((weekId + 1), teamID).filter(item => !employeesOnvacationInTeam(weekId, teamID).includes(item))
@@ -88,77 +103,77 @@ export default function CustomizedTables(props) {
   var dayOnVacation = 0;
   var dayBackFromVacation = 0;
 
-
   employeesOnVacation.map(employeesInVacationTable => {
+   
     var textColumnInTable = employeesInVacationTable.text;
-    const sunday = getSundayFromWeekNum(employeesInVacationTable.week.week_number, 2022);
-    sunday.setDate(sunday.getDate() + 1)
+    var name = employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name;
+   
+    const sunday = getSundayFromWeekNum(employeesInVacationTable.week.week_number, year);
+    sunday.setDate(sunday.getDate())
     const monday = new Date(sunday);
-    monday.setDate(monday.getDate() - 7)
-    if (employeesInVacationTable.week.id === week && employeesInVacationTable.employee.team.id === team) {
+    monday.setDate(monday.getDate() - 6)
+
+    monthOnVacation = getFridayFromWeekNum((week), year);
+    const splitFirstDate = textColumnInTable.split(/[-,:e?" "]/)[0]
+    const splitSecondDate = textColumnInTable.split(/[-,:e?" "]/).pop()
+    var satDate = new Date(year, (monthOnVacation.getMonth()), (monthOnVacation.getDate() + 1))
+    var saturday = satDate.getFullYear() + "-" + (satDate.getMonth() + 1) + "-" + satDate.getDate();
+
+
+    if (employeesInVacationTable.week.week_number === week && employeesInVacationTable.employee.team.id === team) {
       if ((!textColumnInTable.includes("x") && !textColumnInTable.includes("X")) && !textColumnInTable.includes("Mngr") && !textColumnInTable.includes("mngr") && !textColumnInTable.includes("PO")) {
         if (textColumnInTable.includes("-") || textColumnInTable.includes(",") || textColumnInTable.includes(":e") || textColumnInTable.includes("?") || textColumnInTable.includes(" ")) {
-          const splitFirstDate = textColumnInTable.split(/[-,:e?" "]/)[0]
-          const splitSecondDate = textColumnInTable.split(/[-,:e?" "]/).pop()
-          monthOnVacation = getSundayFromWeekNum((week + 14), 2022);
-          var satDate = new Date(2022, (monthOnVacation.getMonth()), (monthOnVacation.getDate() - 1))
-          var saturday = satDate.getFullYear() + "-" + (satDate.getMonth()) + "-" + satDate.getDate();
-          dayOnVacation = new Date(2022, (monthOnVacation.getMonth()), splitFirstDate)
+          dayOnVacation = new Date(year, (monthOnVacation.getMonth()), splitFirstDate)
           if (splitSecondDate.length === 0) {
-            dayBackFromVacation = new Date(2022, (monthOnVacation.getMonth()), (dayOnVacation.getDate() + 1))
-            dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth()) + "-" + dayOnVacation.getDate();
+            dayBackFromVacation = new Date(year, (monthOnVacation.getMonth()), (dayOnVacation.getDate() + 1))
+            dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
             dateBackFromVacation = dayBackFromVacation.getFullYear() + "-" + (dayBackFromVacation.getMonth()) + "-" + dayBackFromVacation.getDate();
-            if (dateBackFromVacation === saturday) {
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
-            } else {
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [backFromVacation], [dateBackFromVacation]))
-            }
+              if (dateBackFromVacation === saturday) {
+                collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+                  } else {
+                  collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+                  collection.push(createData([name], [backFromVacation], [dateBackFromVacation]))
+                }
           } else {
-            dayBackFromVacation = new Date(2022, (monthOnVacation.getMonth()), splitSecondDate)
+            dayBackFromVacation = new Date(year, (monthOnVacation.getMonth()), splitSecondDate)
             dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
             dateBackFromVacation = dayBackFromVacation.getFullYear() + "-" + (dayBackFromVacation.getMonth() + 1) + "-" + (dayBackFromVacation.getDate() + 1);
             if (dateBackFromVacation === saturday) {
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
+              collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
             } else {
               if (dayOnVacation.getDate() > dayBackFromVacation.getDate())
-                dateBackFromVacation = dayBackFromVacation.getFullYear() + "-" + (dayBackFromVacation.getMonth() + 2) + "-" + (dayBackFromVacation.getDate());
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
-              collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [backFromVacation], [dateBackFromVacation]))
+                dateBackFromVacation = dayBackFromVacation.getFullYear() + "-" + (dayBackFromVacation.getMonth()) + "-" + (dayBackFromVacation.getDate());
+              collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+              collection.push(createData([name], [backFromVacation], [dateBackFromVacation]))
             }
           }
         } else {
-          monthOnVacation = getSundayFromWeekNum((week + 14), 2022);
-          dayOnVacation = new Date(getDateOfWeek((week + 15), 2022, textColumnInTable));
-          satDate = new Date(2022, (monthOnVacation.getMonth()), (monthOnVacation.getDate() - 1))
-          saturday = satDate.getFullYear() + "-" + (satDate.getMonth() + 1) + "-" + satDate.getDate();
-          dayBackFromVacation = new Date(getDateOfWeek((week + 15), 2022, (textColumnInTable + 1)));
+          dayOnVacation = new Date(getDateOfWeek((week + 1), year, textColumnInTable));
+          dayBackFromVacation = new Date(getDateOfWeek((week + 1), year, (textColumnInTable + 1)));
           dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
           dateBackFromVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + (dayOnVacation.getDate() + 1);
           if (dateBackFromVacation === saturday) {
-            collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
+            collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
           } else {
-            collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
-            collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [backFromVacation], [dateBackFromVacation]))
+            collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+            collection.push(createData([name], [backFromVacation], [dateBackFromVacation]))
           }
         }
       } else if ((textColumnInTable.includes("x") || textColumnInTable.includes("X")) && !textColumnInTable.includes("Mngr") && !textColumnInTable.includes("mngr") && !textColumnInTable.includes("PO")) {
         if (week === 1) {
-          const sunday = getSundayFromWeekNum((week + 14), 2022);
-          const monday = new Date(sunday);
-          monday.setDate(monday.getDate() - 6)
           dayOnVacation = new Date(monday)
           dateOnVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
-          collection.push(createData([employeesInVacationTable.employee.first_name + employeesInVacationTable.employee.last_name], [goingOnVacation], [dateOnVacation]))
+          collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
         }
       }
     }
+    year = new Date().getFullYear();
     return collection;
   })
   
   employeesOnVacationLastWeek(team, week).map(lw => {
     if (!(employeesOnVacationLastWeek(team, week).length === 0)) {
-      const sunday = getSundayFromWeekNum((week + 14), 2022);
+      const sunday = getSundayFromWeekNum((week), year);
       const monday = new Date(sunday);
       monday.setDate(monday.getDate() - 6)
       dayOnVacation = new Date(monday)
@@ -169,13 +184,14 @@ export default function CustomizedTables(props) {
   })
   employeesOnVacationNextWeek(team, week).map(nw => {
     if (!(employeesOnVacationNextWeek(team, week).length === 0)) {
-      const sunday = getSundayFromWeekNum(week + 14, 2022);
+      const sunday = getSundayFromWeekNum(week, year);
       const friday = new Date(sunday);
       friday.setDate(friday.getDate() - 2)
       dayOnVacation = new Date(friday)
       dateBackFromVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
       collection.push(createData([nw], [goingOnVacation], [dateBackFromVacation]))
     }
+    
     return collection;
   })
   return (
