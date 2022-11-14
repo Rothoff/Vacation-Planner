@@ -4,6 +4,7 @@ import com.example.vacationplanner.model.Employee;
 import com.example.vacationplanner.model.Week;
 import com.example.vacationplanner.repository.EmployeeRepository;
 import com.example.vacationplanner.repository.WeekRepository;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,9 +20,10 @@ public class WeekController {
     private WeekRepository weekRepo;
 
     @GetMapping("/weeks")
-    public List<Week> listAll(Model model) {
-        List<Week> listweeks = weekRepo.findAll();
-        model.addAttribute("listEmployees", listweeks);
-        return listweeks;
+    public String listAll(Model model) {
+        List<Week> listWeeks = weekRepo.findAll();
+        model.addAttribute("listEmployees", listWeeks);
+        String json = new Gson().toJson(listWeeks);
+        return json;
     }
 }

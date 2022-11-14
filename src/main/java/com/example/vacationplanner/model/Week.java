@@ -3,6 +3,7 @@ package com.example.vacationplanner.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -12,10 +13,27 @@ public class Week {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    private String week_name;
-
     private int week_number;
+
+    private Date start_date;
+
+    private Date end_date;
+
+    public Date getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(Date start_date) {
+        this.start_date = start_date;
+    }
+
+    public Date getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(Date end_date) {
+        this.end_date = end_date;
+    }
 
     public int getWeek_number() {
         return week_number;
@@ -33,11 +51,4 @@ public class Week {
         this.id = id;
     }
 
-    public String getWeek_name() {
-        return week_name;
-    }
-
-    public void setWeek_name(String week_name) {
-        this.week_name = week_name;
-    }
 }

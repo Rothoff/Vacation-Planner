@@ -28,10 +28,10 @@ const SelectMonth = ({ onChange }) => {
                 
             } else if (checked1 == false) {
                 setMonth(null);
-                if (count == 22) {
+                if (count == 53) {
                     setCount(1)
                 }if (count == 0){
-                    setCount(21)
+                    setCount(52)
                 }
                 setWeek(count);
                 onChange(count, null);
@@ -40,6 +40,7 @@ const SelectMonth = ({ onChange }) => {
         triggerOnChange();
     }, [count])
     
+   
     const handleClickPositive = () => {
         setCount(count + 1);
     };

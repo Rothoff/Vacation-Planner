@@ -5,7 +5,12 @@ import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 public class DataToDatabase {
@@ -19,6 +24,8 @@ public class DataToDatabase {
     private String numberString;
     private int weekNumber;
     private int nrOfRows = 0;
+
+    int year = Year.now().getValue();
 
     public long numberOfColumns(String page){
         long nrOfColumns = Jsoup.parse(page).select("tbody").get(1)
@@ -83,17 +90,56 @@ public class DataToDatabase {
         System.out.println("rows has been inserted into employee-table");
     }
 
-    public void weekDataToDatabase(JdbcTemplate jdbcTemplate, String page, long numberOfColumns) {
-        for (int i = 2; i < numberOfColumns; i++) {
+    public void weekDataToDatabase(JdbcTemplate jdbcTemplate, String page, long numberOfColumns) throws ParseException {
+        for (int i = 0; i < numberOfColumns; i++) {
             weeks = Jsoup.parse(page).select("tbody").get(0).select("tr").get(0)
                     .select("td").get(i).text();
+            String[] dates = Jsoup.parse(page).select("tbody").get(0).select("tr").get(1)
+                    .select("td").get(i).text().split("-");
+
+
+            String years = Jsoup.parse(page).select("h1").get(1).text();
+            System.out.println(years);
+
+            Date todaysDate = new Date();
+
+            Date testDate = new SimpleDateFormat("dd/MM/yyyy").parse("4/1/2023");
+
+            Date startDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[0].trim()+"/"+year);
+            Date endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+year);
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(startDate);
+            int monthStartDate = cal.get(Calendar.MONTH)+1;
+            cal.setTime(endDate);
+            int monthEndDate = cal.get(Calendar.MONTH)+1;
+            cal.setTime(todaysDate);
+            int monthCurrentDate = cal.get(Calendar.MONTH)+1;
+            cal.setTime(testDate);
+
+            if (cal.get(Calendar.MONTH) == 0 || cal.get(Calendar.MONTH) == 1 || cal.get(Calendar.MONTH) == 2){
+                cal.add(Calendar.YEAR, -1);
+                year = cal.get(Calendar.YEAR);
+            }
+
+            System.out.println(todaysDate);
+            if (monthEndDate < monthCurrentDate && monthStartDate >= monthCurrentDate){
+                endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+(year+1));
+            }else if (monthEndDate < monthCurrentDate){
+                startDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[0].trim()+"/"+(year+1));
+                endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+(year+1));
+            }
+
             numberString = weeks.substring(weeks.indexOf(" ") + 1);
             weekNumber = Integer.parseInt(numberString);
 
             System.out.println("Insert INTO week (week_number) VALUES ('" +weekNumber);
 
-            String namesSql = "Insert INTO week (week_number) VALUES ('" + weekNumber + "')";
-            jdbcTemplate.update(namesSql);
+            String sqlString = "Insert INTO week (week_number,start_date, end_date) VALUES ('" + weekNumber + "'," +
+                    "'" + startDate + "','" + endDate + "')";
+            jdbcTemplate.update(sqlString);
+
+            int year = Year.now().getValue();
         }
         System.out.println("rows has been inserted into week-table");
     }
