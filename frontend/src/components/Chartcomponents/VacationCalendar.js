@@ -20,9 +20,9 @@ const {
 } = require('swedish-holidays');
 const todaysDate = new Date();
 const tomorrowsDate = new Date()
-tomorrowsDate.setDate(todaysDate.getDate()+1)
+tomorrowsDate.setDate(todaysDate.getDate() + 1)
 
-// Get an array of all holidays for a specific year
+// array of all holidays for a specific year
 const holidaysThisYear = getHolidays();
 
 Date.prototype.getWeek = function () {
@@ -95,9 +95,7 @@ const EmployeesOnVacation = (props) => {
 
   useEffect(() => {
     holidaysThisYear.map(hd => {
-
       let lastDayOfWeek = new Date(getSundayFromWeekNum(hd.date.getWeek(), new Date().getFullYear()));
-
       let firstDayOfWeek = new Date(lastDayOfWeek);
       firstDayOfWeek.setDate(lastDayOfWeek.getDate() - 7)
 
@@ -116,25 +114,25 @@ const EmployeesOnVacation = (props) => {
         }
       }
       const awaitWeekData = []
-      if (weekData.length!=0){
-      weekData.map(wd => {
-        awaitWeekData.push(wd)
-      })
-      const startDate = new Date (awaitWeekData[0].start_date)
-      const endDate = new Date (awaitWeekData.pop().end_date)
-
-      if(hd.date.getMonth() >= startDate.getMonth() || hd.date.getMonth()<= endDate.getMonth()){
-        holidays.push({
-          name: hd.name,
-          text: hd.date.getDate(),
-          week: {
-            week_number: hd.date.getWeek(),
-            start_date: firstDayOfWeek,
-            end_date: lastDayOfWeek
-          }
+      if (weekData.length != 0) {
+        weekData.map(wd => {
+          awaitWeekData.push(wd)
         })
-        } 
-    }
+        const startDate = new Date(awaitWeekData[0].start_date)
+        const endDate = new Date(awaitWeekData.pop().end_date)
+
+        if (hd.date.getMonth() >= startDate.getMonth() || hd.date.getMonth() <= endDate.getMonth()) {
+          holidays.push({
+            name: hd.name,
+            text: hd.date.getDate(),
+            week: {
+              week_number: hd.date.getWeek(),
+              start_date: firstDayOfWeek,
+              end_date: lastDayOfWeek
+            }
+          })
+        }
+      }
     })
   }, [team])
 
@@ -189,7 +187,7 @@ const EmployeesOnVacation = (props) => {
   collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
 
   //pushing todays date
-  if (weekId === null && month === null && team!= null) {
+  if (weekId === null && month === null && team != null) {
     collection.push((['Todays date', '', todaysDate, tomorrowsDate]))
   }
 
@@ -207,8 +205,8 @@ const EmployeesOnVacation = (props) => {
           //Here goes "X", ":E", "?"
           if (text = "X" || "x") {
             text = "vac"
-            sunday.setDate(sunday.getDate()-1)
-            
+            sunday.setDate(sunday.getDate() - 1)
+
           }
           //If input text is only one number
         } else {
@@ -261,7 +259,6 @@ const EmployeesOnVacation = (props) => {
           if (singleDate) {
             const monday2 = new Date(emps.week.start_date)
             const sunday2 = new Date(emps.week.start_date)
-
             monday2.setDate(singleDate) //first date = user input
             sunday2.setDate(monday2.getDate() + 1) //second date is the next day
             text = "vac";
@@ -316,7 +313,6 @@ const EmployeesOnVacation = (props) => {
                 monday.setMonth(sunday.getMonth());
               }
             }
-
           }
         } else {
           monday.setDate(afterSplitFirstDate);
@@ -398,9 +394,9 @@ const EmployeesOnVacation = (props) => {
       const weekFilter = (weekData.filter(week => week.week_number === weekId))
       const firstDay = new Date(weekFilter[0].start_date);
       const lastDay = new Date(weekFilter[0].end_date);
-      lastDay.setDate(lastDay.getDate()+1)
+      lastDay.setDate(lastDay.getDate() + 1)
 
-      if (empsNotOnVacation.length === 0 && employeeName==null) {
+      if (empsNotOnVacation.length === 0 && employeeName == null) {
         collection.push(["x", "", firstDay, firstDay])
         collection.push(["x", "", lastDay, lastDay])
       }
@@ -457,25 +453,25 @@ const EmployeesOnVacation = (props) => {
   let daysDiff = 0;
 
   //--------------DATA FOR PIE CHART-----------------
- 
+
   useEffect(() => {
-  collection.map(coll => {  
-    let diffTime = Math.abs(coll[3] - coll[2]);
-    let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
-    if(coll[2].getDay()!=6&&coll[2].getDay()!=0){
-    console.log(coll[2])
-          if (diff === 7) {
-            diff -= 2
-          } else if (diff === 6) {
-            diff -= 2
-          }
-          daysDiff += diff
+    collection.map(coll => {
+      let diffTime = Math.abs(coll[3] - coll[2]);
+      let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (coll[2].getDay() != 6 && coll[2].getDay() != 0) {
+        console.log(coll[2])
+        if (diff === 7) {
+          diff -= 2
+        } else if (diff === 6) {
+          diff -= 2
         }
-    setVacDays(daysDiff)
-    onChange(daysDiff)
-  })
-}, [weekId, month]);
+        daysDiff += diff
+      }
+      setVacDays(daysDiff)
+      onChange(daysDiff)
+    })
+  }, [weekId, month]);
 
   //----------------PIE CHART-------------------
 

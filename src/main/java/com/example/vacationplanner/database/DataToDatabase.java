@@ -1,6 +1,7 @@
 package com.example.vacationplanner.database;
 
 import com.example.vacationplanner.repository.WeekRepository;
+import com.sun.tools.jconsole.JConsoleContext;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,26 +29,24 @@ public class DataToDatabase {
     int year = Year.now().getValue();
 
     public long numberOfColumns(String page){
-        long nrOfColumns = Jsoup.parse(page).select("tbody").get(1)
+        long nrOfColumns = Jsoup.parse(page).select("tbody").get(0)
                 .select("tr").get(0)
-                .select("th").spliterator().estimateSize();
+                .select("td").spliterator().getExactSizeIfKnown();
         return nrOfColumns;
     }
 
     public long numberOfRows(String page){
         long nrOfRows = Jsoup.parse(page)
-                .select("tbody").get(1)
-                .select("tr").spliterator().estimateSize();
+                .select("tbody").get(0)
+                .select("tr").spliterator().getExactSizeIfKnown();
         return nrOfRows;
     }
 
    public long numberOfTbodys (String page){
-       long nrOfRows = Jsoup.parse(page)
-               .select("tbody").spliterator().estimateSize();
-
-       return nrOfRows;
+       long nrOfTbodys = Jsoup.parse(page)
+               .select("tbody").spliterator().getExactSizeIfKnown();
+       return nrOfTbodys;
    }
-
 
     public void teamDataToDatabase(JdbcTemplate jdbcTemplate, String page, long numberOfRows) {
         HashSet<String> uniqueTeams = new HashSet<>();
@@ -68,7 +67,6 @@ public class DataToDatabase {
     }
 
     public void employeeDataToDatabase(JdbcTemplate jdbcTemplate, String page, long numberOfRows) {
-        int nrOfRows = 0;
         for (int i = 2; i < numberOfRows; i++) {
             teamName = Jsoup.parse(page).select("tbody").get(0).select("tr").get(i)
                     .select("th").get(0).text();
@@ -92,19 +90,16 @@ public class DataToDatabase {
 
     public void weekDataToDatabase(JdbcTemplate jdbcTemplate, String page, long numberOfColumns) throws ParseException {
         for (int i = 0; i < numberOfColumns; i++) {
+
             weeks = Jsoup.parse(page).select("tbody").get(0).select("tr").get(0)
                     .select("td").get(i).text();
             String[] dates = Jsoup.parse(page).select("tbody").get(0).select("tr").get(1)
                     .select("td").get(i).text().split("-");
 
-
-            String years = Jsoup.parse(page).select("h1").get(1).text();
-            System.out.println(years);
+            System.out.println("WEEKS" + weeks);
 
             Date todaysDate = new Date();
-
             Date testDate = new SimpleDateFormat("dd/MM/yyyy").parse("4/1/2023");
-
             Date startDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[0].trim()+"/"+year);
             Date endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+year);
 
