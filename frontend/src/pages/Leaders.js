@@ -1,6 +1,6 @@
 import React from 'react';
 import MngrTable from '../components/ChartComponents/MngrTable';
-import Potable from '../components/ChartComponents/PoTable';
+import PoTable from '../components/ChartComponents/PoTable';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -22,7 +22,7 @@ export const Leaders = () => {
       <Item> <h1 className='center'>Manager</h1><MngrTable/></Item>
     </Grid>
     <Grid xs={6}>
-    <Item> <h1 className='center'>Product Owner</h1><Potable/></Item>
+    <Item> <h1 className='center'>Product Owner</h1><PoTable/></Item>
   </Grid>
      </Grid>
      </div>
