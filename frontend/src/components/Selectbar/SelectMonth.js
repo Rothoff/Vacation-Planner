@@ -10,11 +10,14 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import ButtonGroup from '@mui/material/ButtonGroup';
 
+const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+
 const SelectMonth = ({ onChange }) => {
     const [count, setCount] = useState(null);
     const [month, setMonth] = useState('');
     const [week, setWeek] = useState('');
     const [weekNr, setWeekNr] = useState([]); 
+  
     useEffect(() => {
         function triggerOnChange() {
             if (checked2 == false) {
@@ -116,6 +119,7 @@ const SelectMonth = ({ onChange }) => {
                         label="Month"
                         onChange={onMonthSelection}
                     >
+                       
                         <MenuItem value={null}><em>None</em></MenuItem>
                         <MenuItem value={1}>January</MenuItem>
                         <MenuItem value={2}>February</MenuItem>
