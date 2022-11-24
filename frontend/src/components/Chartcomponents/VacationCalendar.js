@@ -66,6 +66,7 @@ const EmployeesOnVacation = (props) => {
   let holidays = [];
   let employeesArray = []
 
+
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -375,7 +376,6 @@ const EmployeesOnVacation = (props) => {
       }
     }
     )
-
     //array with all employees in {team}
     allEmployeesResult.map(emp => {
       empsNamesArr.push(emp.first_name + " " + emp.last_name);
@@ -390,7 +390,7 @@ const EmployeesOnVacation = (props) => {
     const empsNotOnVacation = empsNamesArr.filter(item => !onVacationArr.includes(item));
 
     //pushing employees that or not on vacation to google calendar to "hold up" whole week and month
-    if (weekId !== null && weekId > 0 && weekId < 53) {
+    if (weekId !== null && weekId > 0 && weekId < weekData.slice(-1)[0].week_number+1) {
       const weekFilter = (weekData.filter(week => week.week_number === weekId))
       const firstDay = new Date(weekFilter[0].start_date);
       const lastDay = new Date(weekFilter[0].end_date);
@@ -458,9 +458,8 @@ const EmployeesOnVacation = (props) => {
     collection.map(coll => {
       let diffTime = Math.abs(coll[3] - coll[2]);
       let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
+    
       if (coll[2].getDay() != 6 && coll[2].getDay() != 0) {
-        console.log(coll[2])
         if (diff === 7) {
           diff -= 2
         } else if (diff === 6) {
@@ -477,7 +476,7 @@ const EmployeesOnVacation = (props) => {
 
   return (
     <div id="parentChart">
-      <div id="googleChart"><Chart chartType="Timeline" data={collection} options={options} width="90%" height="40vh" />
+      <div id="googleChart"><Chart chartType="Timeline" data={collection} options={options} width="90%" height="50vh" />
       </div>
     </div>
   );

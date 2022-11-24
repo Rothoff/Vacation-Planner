@@ -17,6 +17,10 @@ const SelectMonth = ({ onChange }) => {
     const [month, setMonth] = useState('');
     const [week, setWeek] = useState('');
     const [weekNr, setWeekNr] = useState([]); 
+    const [checked1, setChecked1] = React.useState(false);
+    const [checked2, setChecked2] = React.useState(false);
+    const [checked3, setChecked3] = React.useState(false);
+    const weekNrOnlyArr = [];
   
     useEffect(() => {
         function triggerOnChange() {
@@ -32,10 +36,10 @@ const SelectMonth = ({ onChange }) => {
                 
             } else if (checked1 == false) {
                 setMonth(null);
-                if (count == 53) {
+                if (count == weekNr.slice(-1)[0].week_number+1) {
+                    setCount(weekNr[0].week_number)
+                }else if (count > 52){
                     setCount(1)
-                }if (count == 0){
-                    setCount(52)
                 }
                 setWeek(count);
                 onChange(count, null);
@@ -51,8 +55,7 @@ const SelectMonth = ({ onChange }) => {
     const handleClickNegative = () => {
         setCount(count - 1);
     };
-    const [checked1, setChecked1] = React.useState(false);
-    const [checked2, setChecked2] = React.useState(false);
+    
     const onWeekSelection = (event) => {
         setWeek(event.target.value)
         setCount(event.target.value)
@@ -64,16 +67,17 @@ const SelectMonth = ({ onChange }) => {
     const toggleCheckBox = event => {
         setChecked1(event.target.checked1)
         setChecked2(false)
-        return checked1
+        console.log("månad")
+        
     }
     const toggleCheckBox2 = event => {
         setChecked2(event.target.checked2)
         setChecked1(false)
-        return checked2
+        console.log("vecka")
+        
     }
     const toggleCheckBox3 = () => {
-        setChecked2(false)
-        setChecked1(false)
+        setCount(null)
     }
     useEffect(() => {
         fetch("http://localhost:8080/weeks")
@@ -84,7 +88,6 @@ const SelectMonth = ({ onChange }) => {
           )
       }, [])
     function CheckBoxes() {
-        
         return (
             <div id="buttonBox">
                 <ButtonGroup variant="text" aria-label="text button group">
@@ -102,7 +105,7 @@ const SelectMonth = ({ onChange }) => {
                         onClick={toggleCheckBox3}
                         value="3"
                         id="CheckYear"
-                    >Year</Button>
+                    >Period</Button>
                 </ButtonGroup>
             </div>
         );
