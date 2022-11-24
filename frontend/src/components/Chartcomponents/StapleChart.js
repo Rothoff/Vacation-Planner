@@ -14,8 +14,6 @@ function StapleChart(props) {
   let teamNameList = []
   let finalStapleData = [];
 
-  console.log("TEAM: ", team);
-
   function getRandomColor() {
     var letters = '0123456789ABCDEF';
     var color = '#';
@@ -45,8 +43,6 @@ function StapleChart(props) {
       )
   }, [])
 
-
-
   if (team !== null) {
     pickedTeam = teamName[team-1].team_name;
   }
@@ -61,8 +57,6 @@ function StapleChart(props) {
     async function teamVacationData() {
       const response = await fetch("http://localhost:8080/vacation/empsonvacperweek");
       const teams = await response.json();
-      let weekNr = 15;
-      let nr = team
       setTeamsData(teams);
       let jsonString="";
       let finalList = []

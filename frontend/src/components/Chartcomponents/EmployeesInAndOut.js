@@ -26,7 +26,6 @@ export const getFridayFromWeekNum = (weekNum, year) => {
   return friday;
 }
 
-console.log(getFridayFromWeekNum(51,2022))
 
 
 function getDateOfWeek(w, y, d) {

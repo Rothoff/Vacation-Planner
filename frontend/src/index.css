@@ -33,6 +33,10 @@ code {
 
 #checkbox {
   display: flex;
+  height: 100%;
+  align-items: center;
+  
+ 
 }
 
 #buttonBox {
@@ -206,8 +210,6 @@ abbr[title] {
 }
 
 /* --------Sprint page --------- */
-
-
 #sprint-container{
   display: flex;
   flex-direction: column;
