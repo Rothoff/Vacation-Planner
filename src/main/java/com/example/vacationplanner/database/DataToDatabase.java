@@ -1,15 +1,11 @@
 package com.example.vacationplanner.database;
 
-import com.example.vacationplanner.repository.WeekRepository;
-import com.sun.tools.jconsole.JConsoleContext;
 import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Year;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -99,7 +95,6 @@ public class DataToDatabase {
             System.out.println("WEEKS" + weeks);
 
             Date todaysDate = new Date();
-            Date testDate = new SimpleDateFormat("dd/MM/yyyy").parse("4/1/2023");
             Date startDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[0].trim()+"/"+year);
             Date endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+year);
 
@@ -110,7 +105,8 @@ public class DataToDatabase {
             int monthEndDate = cal.get(Calendar.MONTH)+1;
             cal.setTime(todaysDate);
             int monthCurrentDate = cal.get(Calendar.MONTH)+1;
-            cal.setTime(testDate);
+
+
 
             if (cal.get(Calendar.MONTH) == 0 || cal.get(Calendar.MONTH) == 1 || cal.get(Calendar.MONTH) == 2){
                 cal.add(Calendar.YEAR, -1);
@@ -128,10 +124,15 @@ public class DataToDatabase {
             numberString = weeks.substring(weeks.indexOf(" ") + 1);
             weekNumber = Integer.parseInt(numberString);
 
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String startDateFormat = simpleDateFormat.format(startDate);
+            String endDateFormat = simpleDateFormat.format(endDate);
+
             System.out.println("Insert INTO week (week_number) VALUES ('" +weekNumber);
 
             String sqlString = "Insert INTO week (week_number,start_date, end_date) VALUES ('" + weekNumber + "'," +
-                    "'" + startDate + "','" + endDate + "')";
+                    "'" + startDateFormat + "','" + endDateFormat + "')";
             jdbcTemplate.update(sqlString);
 
             int year = Year.now().getValue();

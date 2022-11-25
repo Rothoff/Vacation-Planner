@@ -10,7 +10,7 @@ import javax.persistence.*;
 public class Vacation{
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne

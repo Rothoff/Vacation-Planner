@@ -8,6 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.sql.SQLDataException;
+
 @SpringBootApplication
 public class VacationPlannerApplication implements CommandLineRunner {
     @Autowired
@@ -30,16 +32,15 @@ public class VacationPlannerApplication implements CommandLineRunner {
 
 
         DataToDatabase dbc = new DataToDatabase();
-        dbc.resetAllTables(jdbcTemplate);
-        dbc.weekDataToDatabase(jdbcTemplate, page, dbc.numberOfColumns(page));
         dbc.teamDataToDatabase(jdbcTemplate,page, dbc.numberOfRows(page));
         dbc.employeeDataToDatabase(jdbcTemplate,page, dbc.numberOfRows(page));
+        dbc.weekDataToDatabase(jdbcTemplate, page, dbc.numberOfColumns(page));
         dbc.vacationDataToDataBase(jdbcTemplate,page, dbc.numberOfColumns(page), dbc.numberOfRows(page));
         dbc.numberOfRows(page);
 
-        System.out.println("number of TBodys: " + dbc.numberOfTbodys(page));
-        System.out.println("number of Rows:" + dbc.numberOfRows(page));
-        System.out.println("number of Columns" + dbc.numberOfColumns(page));
+      //  System.out.println("number of TBodys: " + dbc.numberOfTbodys(page));
+      //  System.out.println("number of Rows:" + dbc.numberOfRows(page));
+      //  System.out.println("number of Columns" + dbc.numberOfColumns(page));
 
     }
 }
