@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, cloneElement } from "react";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -95,20 +95,27 @@ export default function CustomizedTables(props) {
   } 
 
   function employeesOnVacationLastWeek(teamID, weekNumber) {
-    var lastWeekId = weekNumber - 1;
-    if (weekNumber == 1) {
-      lastWeekId = 52;
+    var weekNumberThisWeek = week;
+    var weekNumberLastWeek = 0;
+    if (weekNumberThisWeek === 1) {
+      weekNumberLastWeek = 52;
+    } else {
+     weekNumberLastWeek = week - 1;
     }
-    const names = employeesOnvacationInTeam(lastWeekId, teamID).filter(item => !employeesOnvacationInTeam(weekNumber, teamID).includes(item))
+    
+    const names = employeesOnvacationInTeam(weekNumberLastWeek, teamID).filter(item => !employeesOnvacationInTeam(weekNumber, teamID).includes(item))
     return names;
   }
 
   function employeesOnVacationNextWeek(teamID, weekId) {
-    var nextWeekId = weekId + 1;
-    if (weekId === 52){
-      nextWeekId = 1;
+    var weekNumberThisWeek = week;
+    var weekNumberNextWeek = week + 1;
+
+    if (weekNumberThisWeek === 52) {
+      weekNumberNextWeek = 1;
     } 
-    const names = employeesOnvacationInTeam(nextWeekId, teamID).filter(item => !employeesOnvacationInTeam(weekId,team).includes(item))
+   
+    const names = employeesOnvacationInTeam(weekNumberNextWeek, teamID).filter(item => !employeesOnvacationInTeam(weekId,team).includes(item))
     return names;
   }
 
@@ -208,10 +215,10 @@ export default function CustomizedTables(props) {
     dateBackFromVacation = backFromVacationDate(dayOnVacation.getDate(), dayBackFromVacation.getDate(), startDate, endDate)
     
     if (checkIfSaturday(year, week, dayBackFromVacation.getDate())) {
-      collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+      collection.push(createData(name, goingOnVacation, dateOnVacation))
     } else {
-      collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
-      collection.push(createData([name], [backFromVacation], [dateBackFromVacation]))
+      collection.push(createData(name, goingOnVacation, dateOnVacation))
+      collection.push(createData(name, backFromVacation, dateBackFromVacation))
     }  
   }
 
@@ -230,10 +237,10 @@ export default function CustomizedTables(props) {
     dateBackFromVacation = backFromVacationDate(dayOnVacation.getDate(), dayBackFromVacation.getDate(), startDate, endDate)
 
     if (checkIfSaturday(year, week, dayBackFromVacation.getDate())) {
-      collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
+      collection.push(createData(name, goingOnVacation, dateOnVacation))
     } else {
-      collection.push(createData([name], [goingOnVacation], [dateOnVacation]))
-      collection.push(createData([name], [backFromVacation], [dateBackFromVacation]))
+      collection.push(createData(name, goingOnVacation, dateOnVacation))
+      collection.push(createData(name, backFromVacation, dateBackFromVacation))
     }
   }
 
@@ -294,8 +301,23 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
     } 
   })
 
+  function peopleGoingOnVac(){
+  const list = []
+  collection.map(ma =>{
+   list.push(ma.name)
+  })
+  return list;
+}
+  function condition(name){
+    var value = 0;
+    value = peopleGoingOnVac().includes(name)
+    return value;
+  }
+
+  
+
   employeesOnVacationLastWeek(team, week).map(lw => {
-    if (!(employeesOnVacationLastWeek(team, week).length === 0)) {
+    if (!(employeesOnVacationLastWeek(team, week).length === 0) && condition(lw) == false) {
       var weekNumberThisWeek = week;
       var weekNumberLastWeek = 0;
       var year = 0;
@@ -314,12 +336,13 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
       dayOnVacation = new Date(monday)
 
       dateBackFromVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
-      collection.push(createData([lw], [backFromVacation], [dateBackFromVacation]))
+      collection.push(createData(lw, backFromVacation, dateBackFromVacation))
     }
   })
 
   employeesOnVacationNextWeek(team, week).map(nw => {
-    if (!(employeesOnVacationNextWeek(team, week).length === 0)) {
+    console.log(condition(nw))
+    if (!(employeesOnVacationNextWeek(team, week).length === 0) && (condition(nw) == false)) {
       var weekNumberThisWeek = week;
       var weekNumberNextWeek = 0;
       var year = 0;
@@ -335,7 +358,7 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
       const friday = getFridayFromWeekNum(week, year);
       dayOnVacation = new Date(friday)
       dateBackFromVacation = dayOnVacation.getFullYear() + "-" + (dayOnVacation.getMonth() + 1) + "-" + dayOnVacation.getDate();
-      collection.push(createData([nw], [goingOnVacation], [dateBackFromVacation]))
+      collection.push(createData(nw, goingOnVacation, dateBackFromVacation))
     }
 
   })
