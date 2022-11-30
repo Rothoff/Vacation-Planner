@@ -148,7 +148,7 @@ public class DataToDatabase {
             firstName = fullName.substring(0, fullName.indexOf(" ") + 1);
             lastName = fullName.substring(fullName.indexOf(" ") + 1);
 
-            for (int column = 2; column < numberOfColumns; column++) {
+            for (int column = 0; column < numberOfColumns; column++) {
                 tdText = Jsoup.parse(page).select("tbody").get(0).select("tr").get(row)
                         .select("td").get(column).text();
                 weeks = Jsoup.parse(page).select("tbody").get(0).select("tr").get(0)
