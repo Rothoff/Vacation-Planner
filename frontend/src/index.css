@@ -234,3 +234,12 @@ abbr[title] {
   align-items: center;
 }
 
+.navTitle{
+  display: flex;
+  justify-content: center;
+  color: white;
+  background-color: #014572;
+  margin-top: 0;
+  margin-bottom: 0;
+ font-size: 40px;
+}
