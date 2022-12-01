@@ -7,16 +7,22 @@ import { SidebarData } from './SidebarData';
 import SubMenu from './SubMenu';
 import { IconContext } from 'react-icons/lib';
 
+
+
 const Nav = styled.div`
-  background: #15171c;
+  background: #014572;
+  color: white;
+  font-size:4vh;
   height: 80px;
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  
 `;
 
 const NavIcon = styled(Link)`
   margin-left: 2rem;
+  width: 43%;
   font-size: 2rem;
   height: 80px;
   display: flex;
@@ -25,7 +31,7 @@ const NavIcon = styled(Link)`
 `;
 
 const SidebarNav = styled.nav`
-  background: #15171c;
+  background: #014572;
   width: 200px;
   minWidth: 100px;
   height: 100vh;
@@ -54,7 +60,8 @@ const Sidebar = () => {
           <NavIcon to='#'>
             <FaIcons.FaBars onClick={showSidebar} />
           </NavIcon>
-        </Nav>
+          Kambi Vacation
+          </Nav>
         <SidebarNav sidebar={sidebar}>
           <SidebarWrap>
             <NavIcon to='#'>
