@@ -113,7 +113,6 @@ public class DataToDatabase {
                 year = cal.get(Calendar.YEAR);
             }
 
-            System.out.println(todaysDate);
             if (monthEndDate < monthCurrentDate && monthStartDate >= monthCurrentDate){
                 endDate = new SimpleDateFormat("dd/MM/yyyy").parse(dates[1].trim()+"/"+(year+1));
             }else if (monthEndDate < monthCurrentDate){
@@ -151,6 +150,7 @@ public class DataToDatabase {
             for (int column = 0; column < numberOfColumns; column++) {
                 tdText = Jsoup.parse(page).select("tbody").get(0).select("tr").get(row)
                         .select("td").get(column).text();
+
                 weeks = Jsoup.parse(page).select("tbody").get(0).select("tr").get(0)
                         .select("td").get(column).text().replaceAll("week ", "");
 

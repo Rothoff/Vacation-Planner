@@ -45,7 +45,7 @@ code {
 
 }
 
-#googleChart {
+#calendar-Chart {
   display: flex;
   justify-content: center;
   margin-left: 10%
@@ -234,6 +234,7 @@ abbr[title] {
   align-items: center;
 }
 
+<<<<<<< HEAD
 .navTitle{
   display: flex;
   justify-content: center;
@@ -243,3 +244,20 @@ abbr[title] {
   margin-bottom: 0;
  font-size: 40px;
 }
+=======
+#vacTable{
+  overflow-x: scroll;
+  height: auto;
+  max-width:200vh;
+  table-layout: fixed;
+  width: 90%
+}
+#vacTableDiv{
+  display: flex;
+  justify-content: center;
+  margin-left: 10%;
+}
+#week-text{
+  font-size: xx-small;
+}
+>>>>>>> calendar

@@ -1,7 +1,6 @@
-import { Today } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Chart } from "react-google-charts";
+import { Table, Tag, Popover } from 'antd';
 //imports from fetch file
 
 export const getSundayFromWeekNum = (weekNum, year) => {
@@ -19,11 +18,11 @@ const {
   isPublicHoliday
 } = require('swedish-holidays');
 const todaysDate = new Date();
-const tomorrowsDate = new Date()
-tomorrowsDate.setDate(todaysDate.getDate() + 1)
 
 // array of all holidays for a specific year
 const holidaysThisYear = getHolidays();
+
+const isThisAHoliday = isHoliday(new Date("2019-12-24"));
 
 Date.prototype.getWeek = function () {
   var day_miliseconds = 86400000,
@@ -63,7 +62,6 @@ const EmployeesOnVacation = (props) => {
   const onVacationArr = [];
   const { onChange } = props;
   let filterResults = [];
-  let holidays = [];
   let employeesArray = []
 
 
@@ -94,77 +92,6 @@ const EmployeesOnVacation = (props) => {
       )
   }, [])
 
-  useEffect(() => {
-    holidaysThisYear.map(hd => {
-      let lastDayOfWeek = new Date(getSundayFromWeekNum(hd.date.getWeek(), new Date().getFullYear()));
-      let firstDayOfWeek = new Date(lastDayOfWeek);
-      firstDayOfWeek.setDate(lastDayOfWeek.getDate() - 7)
-
-      if (todaysDate.getMonth() === 11 || todaysDate.getMonth() === 10 || todaysDate.getMonth() === 9) {
-        if (hd.date.getMonth() < todaysDate.getMonth()) {
-
-          if (firstDayOfWeek.getFullYear() === lastDayOfWeek.getFullYear()) {
-            lastDayOfWeek.setFullYear(lastDayOfWeek.getFullYear() + 1)
-            firstDayOfWeek.setFullYear(lastDayOfWeek.getFullYear())
-            lastDayOfWeek.setDate(lastDayOfWeek.getDate() + 7);
-            if (firstDayOfWeek.getDay() <= 6) {
-              firstDayOfWeek.setMonth(lastDayOfWeek.getMonth())
-            }
-            firstDayOfWeek.setDate(lastDayOfWeek.getDate() - 7)
-          }
-        }
-      }
-      const awaitWeekData = []
-      if (weekData.length != 0) {
-        weekData.map(wd => {
-          awaitWeekData.push(wd)
-        })
-        const startDate = new Date(awaitWeekData[0].start_date)
-        const endDate = new Date(awaitWeekData.pop().end_date)
-
-        if (hd.date.getMonth() >= startDate.getMonth() || hd.date.getMonth() <= endDate.getMonth()) {
-          holidays.push({
-            name: hd.name,
-            text: hd.date.getDate(),
-            week: {
-              week_number: hd.date.getWeek(),
-              start_date: firstDayOfWeek,
-              end_date: lastDayOfWeek
-            }
-          })
-        }
-      }
-    })
-  }, [team])
-
-
-  useEffect(() => {
-    holidays.map(hol => {
-      allEmployees.map(emp => {
-        employeesArray.push({
-          employee: {
-            id: emp.id,
-            first_name: emp.first_name,
-            last_name: emp.last_name,
-            team: {
-              id: emp.team.id,
-              team_name: emp.team.team_name
-            }
-          },
-          id: "",
-          text: "" + hol.text,
-          type: "" + hol.name,
-          week: {
-            id: "",
-            week_number: hol.week.week_number,
-            start_date: hol.week.start_date,
-            end_date: hol.week.end_date
-          }
-        })
-      })
-    })
-  }, [team])
-
   //pushing data from fetch depending on if user wants to sort on full team or just one employee
   useEffect(() => {
     const concatArray = employees.concat(employeesArray)
@@ -184,17 +111,8 @@ const EmployeesOnVacation = (props) => {
     setAllEmployeesResult(filterResults);
   }, [team])
 
-  // First row doesnt show for some reason, so we need to push an empty row
-  collection.push(['first row', 'Vacation', new Date(2021, 5, 1), new Date(2021, 5, 1)],)
-
-  //pushing todays date
-  if (weekId === null && month === null && team != null) {
-    collection.push((['Todays date', '', todaysDate, tomorrowsDate]))
-  }
-
   {
     results.map(emps => {
-
       let monday = new Date(emps.week.start_date);
       let sunday = new Date(emps.week.end_date);
       let text = emps.text;
@@ -206,16 +124,14 @@ const EmployeesOnVacation = (props) => {
           //Here goes "X", ":E", "?"
           if (text = "X" || "x") {
             text = "vac"
-            sunday.setDate(sunday.getDate() - 1)
-
+            sunday.setDate(sunday.getDate() - 2)
           }
           //If input text is only one number
         } else {
           monday.setDate(text) //first date = user input
-          sunday.setDate(monday.getDate() + 1) //second date is the next day
+          sunday.setDate(monday.getDate()) //second date is the same day
 
           if (sunday.getDate() <= 6) { //if this weeks sundays date is < 6, sunday is next month (correct month)
-
             if (monday.getFullYear() !== sunday.getFullYear()) {
 
               if (Number(text) < 6) {
@@ -261,22 +177,21 @@ const EmployeesOnVacation = (props) => {
             const monday2 = new Date(emps.week.start_date)
             const sunday2 = new Date(emps.week.start_date)
             monday2.setDate(singleDate) //first date = user input
-            sunday2.setDate(monday2.getDate() + 1) //second date is the next day
+            sunday2.setDate(monday2.getDate())
             text = "vac";
 
             if (weekId === emps.week.week_number && month === null) {
               collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, sunday2])
 
             } else if (month === monday.getMonth() + 1 && weekId == null) {
+
               if (sunday.getMonth() === month) {
                 var date = new Date();
-
-                if (date.getMonth() === 11 || date.getMonth() === 10 || date.getMonth() === 9) {
+                if (todaysDate.getMonth() === 11 || date.getMonth() === 10 || date.getMonth() === 9) {
                   if (month === 1) {
                     date.setFullYear(date.getFullYear() + 1)
                   }
                 }
-
                 var lastDay = new Date(date.getFullYear(), month, 1);
                 collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, lastDay])
               } else {
@@ -284,7 +199,6 @@ const EmployeesOnVacation = (props) => {
               }
             } else if (weekId === null && month === null) {
               collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, sunday2])
-
             }
           }
           const index = textArray.indexOf(singleDate);
@@ -295,13 +209,13 @@ const EmployeesOnVacation = (props) => {
 
         const afterSplitFirstDate = textArray[0].trim() //first number =  first date
         const afterSplitSecondDate = textArray.pop().trim() //second number = second date
-        sunday.setDate(Number(afterSplitSecondDate) + Number(1)) //adding +1 on second date because of google chart
 
+        sunday.setDate(afterSplitSecondDate);
         if (afterSplitSecondDate !== "") {
           if (afterSplitFirstDate === "") {
             monday.setDate(afterSplitSecondDate);
             sunday.setMonth(monday.getMonth());
-          } else if (afterSplitSecondDate < afterSplitFirstDate) { //second date is smaller = next month
+          } else if (afterSplitSecondDate.parseInt < afterSplitFirstDate.parseInt) { //second date is smaller = next month
             monday.setDate(afterSplitFirstDate);
             sunday.setMonth(monday.getMonth() + 1);
             sunday.setFullYear(monday.getFullYear());
@@ -320,11 +234,14 @@ const EmployeesOnVacation = (props) => {
         }
         text = "vac";
       }
-      if (sunday.getDate() > monday.getDate() && sunday.getFullYear() > monday.getFullYear()) {
+
+      if (sunday.getDate() > monday.getDate() && sunday.getFullYear() > monday.getFullYear())  {
+        sunday.setFullYear(monday.getFullYear());
+      }else if(sunday.getDate() === monday.getDate()){
         sunday.setFullYear(monday.getFullYear());
       }
 
-      //pushing data to calendar
+      //pushing data to collection[] for calendar
       if (weekId === emps.week.week_number && month === null) {
         const diffTime = Math.abs(sunday - monday);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
@@ -334,7 +251,7 @@ const EmployeesOnVacation = (props) => {
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
 
       } else if (month === monday.getMonth() + 1 && weekId == null) {
-        if (sunday.getMonth() === month) {
+        if (sunday.getMonth() === month+1) {
           const date = new Date();
           if (date.getMonth() === 11 || date.getMonth() === 10 || date.getMonth() === 9) {
             if (month === 1) {
@@ -351,7 +268,7 @@ const EmployeesOnVacation = (props) => {
         if (monday.getMonth() !== (month - 1)) {
           if (sunday.getDate() > 1) {
             var date = new Date();
-            if (date.getMonth() === 11 || date.getMonth() === 10 || date.getMonth() === 9) {
+            if (todaysDate.getMonth() === 11 || todaysDate.getMonth() === 10 || todaysDate.getMonth() === 9) {
               if (month === 1) {
                 date.setFullYear(date.getFullYear() + 1)
               }
@@ -372,7 +289,6 @@ const EmployeesOnVacation = (props) => {
 
         }
         collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
-
       }
     }
     )
@@ -385,99 +301,139 @@ const EmployeesOnVacation = (props) => {
     collection.map(coll => {
       onVacationArr.push(coll[0]);
     })
-
-    //array with employees that's not on vacation
-    const empsNotOnVacation = empsNamesArr.filter(item => !onVacationArr.includes(item));
-
-    //pushing employees that or not on vacation to google calendar to "hold up" whole week and month
-    if (weekId !== null && weekId > 0 && weekId < weekData.slice(-1)[0].week_number+1) {
-      const weekFilter = (weekData.filter(week => week.week_number === weekId))
-      const firstDay = new Date(weekFilter[0].start_date);
-      const lastDay = new Date(weekFilter[0].end_date);
-      lastDay.setDate(lastDay.getDate() + 1)
-
-      if (empsNotOnVacation.length === 0 && employeeName == null) {
-        collection.push(["x", "", firstDay, firstDay])
-        collection.push(["x", "", lastDay, lastDay])
-      }
-      empsNotOnVacation.map(emp => {
-        collection.push([emp, "", firstDay, firstDay])
-        collection.push([emp, "", lastDay, lastDay])
-      })
-      if (employeeName !== null) { //pushing empty row for employee filter to "hold up" week
-        collection.push(["Week: " + (weekId), "", firstDay, firstDay])
-        collection.push(["Week: " + (weekId), "", lastDay, lastDay])
-      }
-
-    } else if (month !== null) {
-      const date = new Date();
-
-      const firstDay = new Date(date.getFullYear(), month - 1, 1);
-      const lastDay = new Date(date.getFullYear(), month, 1);
-      if (empsNotOnVacation.length === 0) {
-        if (todaysDate.getMonth() > firstDay.getMonth()) {
-          firstDay.setFullYear(firstDay.getFullYear() + 1)
-          lastDay.setFullYear(firstDay.getFullYear())
-        }
-        collection.push(["x", "", firstDay, firstDay])
-        collection.push(["x", "", lastDay, lastDay])
-      }
-      empsNotOnVacation.map(emp => {
-        collection.push([emp, "", firstDay, firstDay])
-        collection.push([emp, "", lastDay, lastDay])
-      })
-      if (employeeName !== null) { // holding up month
-        collection.push(["x", "", firstDay, firstDay])
-        collection.push(["x", "", lastDay, lastDay])
-      }
-    } else {
-      const dateArray = [];
-      weekData.map(week => {
-        dateArray.push((week.start_date))
-        dateArray.push((week.end_date))
-      })
-      let firstDay = new Date(dateArray[0]);
-      let lastDay = new Date(dateArray.pop());
-      empsNotOnVacation.map(emp => {
-        collection.push([emp, "", firstDay, firstDay])
-        collection.push([emp, "", lastDay, lastDay])
-      })
-
-    }
   }
-
-  var options = {
-    colors: ['#e0440e']
-  };
-
-  let daysDiff = 0;
-
+  
   //--------------DATA FOR PIE CHART-----------------
-
+  let daysDiff = 0;
+  
   useEffect(() => {
     collection.map(coll => {
-      let diffTime = Math.abs(coll[3] - coll[2]);
+      let startDate = new Date(coll[2])
+      let endDate = new Date (coll[3])
+
+      endDate.setDate(endDate.getDate()+1)
+
+      let diffTime = Math.abs(endDate - startDate);
       let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-      if (coll[2].getDay() != 6 && coll[2].getDay() != 0) {
-        if (diff === 7) {
-          diff -= 2
-        } else if (diff === 6) {
-          diff -= 2
-        }
+     
         daysDiff += diff
-      }
-      setVacDays(daysDiff)
-      onChange(daysDiff)
     })
-  }, [weekId, month]);
+    setVacDays(daysDiff)
+    onChange(daysDiff)
+
+  }, [collection, month]);
 
   //----------------PIE CHART-------------------
+  var getDaysInMonth = function (month, year) {
+    return new Date(year, month, 0).getDate();
+  };
+
+  const data = [];
+  let keyNr = 0;
+  let daysInMonth = getDaysInMonth(month, 2022)
+  let dateArr = []
+
+  for (let i = 0; i < daysInMonth; i++) {
+    dateArr[i] = ""
+  }
+
+  empsNamesArr.map(emps => {
+    data.push(
+      {
+        key: keyNr + 1,
+        name: emps,
+        vacData: []
+      },
+    )
+    collection.map(coll => {
+      if (emps == coll[0]) {
+        let startDate = coll[2].getDate();
+        let endDate = coll[3].getDate();
+        let diff = (endDate - startDate);
+        for (let i = 0; i < diff; i++) {
+          dateArr[startDate + i] = coll[1]
+        }
+        dateArr[startDate - 1] = coll[1];
+        dateArr[endDate - 1] = coll[1];
+        for (let i = 0; i < daysInMonth; i++) {
+          data[keyNr].vacData[i] = dateArr[i]
+        }
+      }
+    })
+    dateArr = []
+    keyNr++;
+  })
+
+  
+  const columns = [
+    {
+      title: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + 'Name' + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0',
+      dataIndex: 'name',
+      fixed: true,
+      width: 300,
+    },
+  ]
+
+  for (let i = 0; i < daysInMonth; i++) {
+    let color = "black"
+    let tagColor = "black"
+    let date = new Date('2022-' + month + '-' + (i + 1))
+    const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+    if (todaysDate.getMonth() === 11 || todaysDate.getMonth() === 10 || todaysDate.getMonth() === 9) {
+      if (month === 1) {
+        date.setFullYear(date.getFullYear() + 1)
+      }
+    }
+    let content = date.getDate() + "/" + month + "-" + date.getFullYear();
+
+    if (isHoliday(date)) {
+      color = "orange";
+      content = isHoliday(date).name + " " + content + " (" + dayOfWeek[date.getDay()] + ")"
+      if (isHoliday(date).isPublicHoliday) {
+        color = "red"
+      }
+    } else if (date.getDate() === todaysDate.getDate() && date.getMonth() === todaysDate.getMonth()) {
+      color = "blue";
+      content = content + " (TODAY)"
+    } else {
+      content = content + " (" + dayOfWeek[date.getDay()] + ")"
+      if (date.getDay() === 6 || date.getDay() === 0) {
+        color = "red";
+      }
+    }
+
+    function vacTag(text) {
+
+      if (text.vacData[i] != undefined && text.vacData[i] != "") {
+        tagColor = "red";
+        content = "Vacation"
+      } else {
+        tagColor = "green"
+        content = "Working"
+      }
+      return <Popover content={content} trigger="hover">
+        <Tag color={tagColor}>{text.vacData[i]}</Tag>
+      </Popover>
+    }
+
+    columns.push({
+      title: <Popover content={content} trigger="hover"><Tag color={color}>
+        {[i + 1]}
+      </Tag> </Popover>,
+      render: (_, text) => (
+        <span>
+          {vacTag(text)}
+        </span>
+      )
+    })
+  }
 
   return (
     <div id="parentChart">
-      <div id="googleChart"><Chart chartType="Timeline" data={collection} options={options} width="90%" height="50vh" />
+      <div id="calendar-Chart"><Table id='vacTable' columns={columns} dataSource={data} />
       </div>
+
     </div>
   );
 
