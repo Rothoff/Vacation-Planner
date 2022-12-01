@@ -40,6 +40,10 @@ const SelectMonth = ({ onChange }) => {
                     setCount(weekNr[0].week_number)
                 }else if (count > 52){
                     setCount(1)
+                }else if (count == weekNr[0].week_number-1){
+                    setCount(weekNr.slice(-1)[0].week_number+1)
+                } else if (count<1){
+                    setCount(52)
                 }
                 setWeek(count);
                 onChange(count, null);
@@ -48,6 +52,7 @@ const SelectMonth = ({ onChange }) => {
         triggerOnChange();
     }, [count])
     
+   
    
     const handleClickPositive = () => {
         setCount(count + 1);
@@ -67,14 +72,10 @@ const SelectMonth = ({ onChange }) => {
     const toggleCheckBox = event => {
         setChecked1(event.target.checked1)
         setChecked2(false)
-        console.log("månad")
-        
     }
     const toggleCheckBox2 = event => {
         setChecked2(event.target.checked2)
         setChecked1(false)
-        console.log("vecka")
-        
     }
     const toggleCheckBox3 = () => {
         setCount(null)

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Chart } from "react-google-charts";
-import { AiOutlineConsoleSql } from "react-icons/ai";
+
 
 function pieChart(props) {
     const { team, week, month, vacDays } = props;

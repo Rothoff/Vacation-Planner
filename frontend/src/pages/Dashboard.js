@@ -4,7 +4,7 @@ import Selectlabels from '../components/Selectbar/SelectTeam';
 import EmployeesOnVacation from '../components/ChartComponents/VacationCalendar'
 import SelectMonth from '../components/Selectbar/SelectMonth';
 import PieChart from '../components/ChartComponents/PieChart';
-import EmployeesInAndOut from '../components/ChartComponents/EmployeesInAndOut'
+import EmployeesInAndOut from '../components/ChartComponents/EmployeesInAndOut';
 
 
 const Dashboard = () => {
@@ -26,6 +26,7 @@ const Dashboard = () => {
     setVacDays(vacDays)
   }
 
+
   return (
     <div className='dashboard'>
       <div id="topDiv">
@@ -39,8 +40,8 @@ const Dashboard = () => {
         <EmployeesOnVacation onChange={onChangeSelection3} team={team} weekId={weekId} month={month} employeeName={employeeName} />
       </div>
       <div id="bottomDiv">
-      <div id="pieChartDiv"> <PieChart week={weekId} team={team} month={month} vacDays={vacDays} /></div>
-      <div id="inOutDiv"><EmployeesInAndOut week={weekId} team={team} /></div>
+        <div id="pieChartDiv"> <PieChart week={weekId} team={team} month={month} vacDays={vacDays} /></div>
+        <div id="inOutDiv"><EmployeesInAndOut week={weekId} team={team} /></div>
       </div>
     </div>
 
