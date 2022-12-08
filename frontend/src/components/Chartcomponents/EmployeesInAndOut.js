@@ -61,7 +61,6 @@ function createData(name, inOrOut, date) {
   return { name, inOrOut, date };
 }
 export default function CustomizedTables(props) {
-  var year = new Date().getFullYear();
   const { team } = props;
   const { week } = props;
   let backFromVacation = <WestIcon sx={{ color: 'blue' }} />
@@ -350,7 +349,7 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
       if (weekNumberThisWeek === 52) {
         weekNumberNextWeek = 1;
       } 
-      if(weekNumberThisWeek < weekNumberNextWeek){
+      if(weekNumberThisWeek < weekNumberNextWeek || weekNumberThisWeek <= 3){
         year = new Date().getFullYear() + 1;
       } else {
         year = new Date().getFullYear();

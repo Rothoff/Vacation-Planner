@@ -1,6 +1,6 @@
 import React from 'react';
 import MngrTable from '../components/ChartComponents/MngrTable';
-import PoTable from '../components/ChartComponents/PoTable';
+import PoTable from '../components/ChartComponents/Potable';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
