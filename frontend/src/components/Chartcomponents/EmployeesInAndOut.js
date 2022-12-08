@@ -1,4 +1,4 @@
-import React, { useState, useEffect, cloneElement } from "react";
+import React, { useState, useEffect} from "react";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -257,7 +257,7 @@ export default function CustomizedTables(props) {
     var splitText = text.split(/[,]/);
     
     for (let i = 0; i < splitText.length - 1; i++) {
-      if ((parseInt(splitText[i]) + 1) == parseInt(splitText[i + 1])) {
+      if ((parseInt(splitText[i]) + 1) === parseInt(splitText[i + 1])) {
         return false;
       } else {
         return true;
@@ -271,7 +271,7 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
       var dateBack = 0;
       if(tex.length > 2 )
       for (let index = 0; index < (tex.length - 1); index++) {
-        if((parseInt(tex[index]) + 1) == parseInt(tex[index + 1])){
+        if((parseInt(tex[index]) + 1) === parseInt(tex[index + 1])){
           dateGo = tex[index];
           dateBack = tex[index + 1];
           vacationForMoreThanOneDay(week,dateGo,dateBack, name, startDate,endDate)
@@ -316,7 +316,7 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
   
 
   employeesOnVacationLastWeek(team, week).map(lw => {
-    if (!(employeesOnVacationLastWeek(team, week).length === 0) && condition(lw) == false) {
+    if (!(employeesOnVacationLastWeek(team, week).length === 0) && condition(lw) === false) {
       var weekNumberThisWeek = week;
       var weekNumberLastWeek = 0;
       var year = 0;
@@ -341,7 +341,7 @@ function vacationTwoDiffTimes(text,name, week, startDate,endDate) {
 
   employeesOnVacationNextWeek(team, week).map(nw => {
     console.log(condition(nw))
-    if (!(employeesOnVacationNextWeek(team, week).length === 0) && (condition(nw) == false)) {
+    if (!(employeesOnVacationNextWeek(team, week).length === 0) && (condition(nw) === false)) {
       var weekNumberThisWeek = week;
       var weekNumberNextWeek = 0;
       var year = 0;
