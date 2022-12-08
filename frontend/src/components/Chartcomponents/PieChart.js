@@ -28,14 +28,12 @@ function pieChart(props) {
         return new Date(year, month, 0).getDate();
     }
 
-
-
     if (week !== null && month === null) {
         var totalDaysForTeam = amountInTeam * Number(5);
     } else if (month !== null && week === null) {
         var totalDaysOfMonth = daysInMonth(month, 2022)
         var totalDaysForTeam = amountInTeam * totalDaysOfMonth
-        
+
 
         function isWeekday(year, month, day) {
             var day = new Date(year, month, day).getDay();
@@ -51,7 +49,7 @@ function pieChart(props) {
             return weekdays;
         }
         totalDaysForTeam = amountInTeam * getWeekdaysInMonth((month - 1), 2022)
-       
+
     }
 
     var workDays = totalDaysForTeam - vacDays;
@@ -62,7 +60,7 @@ function pieChart(props) {
         ["Vacation", vacDays],
     ];
     return (
-            <Chart chartType="PieChart" data={data} width="100%" height="100%"/>
+        <Chart chartType="PieChart" data={data} width="100%" height="100%" />
     )
 };
 export default pieChart;

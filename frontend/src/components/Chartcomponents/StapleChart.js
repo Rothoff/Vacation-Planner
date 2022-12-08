@@ -1,4 +1,6 @@
+import { color } from '@mui/system';
 import React, { useState, useEffect } from 'react';
+import i from 'rechart/lib/chart';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
@@ -12,17 +14,9 @@ function StapleChart(props) {
   let pickedTeam = "";
   let teamNameList = []
   let finalStapleData = [];
+  let listOfColors = []
 
-  function getRandomColor() {
-    var letters = '0123456789ABCDEF';
-    var color = '#';
-    for (var i = 0; i < 6; i++) {
-      color += letters[Math.floor(Math.random() * 16)];
-
-    }
-    return color;
-  }
-
+ 
   useEffect(() => {
     fetch("http://localhost:8080/teams")
       .then(res => res.json())
@@ -31,7 +25,6 @@ function StapleChart(props) {
       }
       )
   }, [])
-
 
   useEffect(() => {
     fetch("http://localhost:8080/weeks")
@@ -43,21 +36,39 @@ function StapleChart(props) {
   }, [])
 
   if (team !== null) {
-    pickedTeam = teamName[team-1].team_name;
+    pickedTeam = teamName[team - 1].team_name;
   }
 
   teamName.map(teamN => {
     teamNameList.push(teamN.team_name)
   })
 
-  let myList = []
+  for (let i = 0; i < teamNameList.length + 1; i++) {
+    listOfColors[i] = getRandomColor()
+  }
+
+
+  function getRandomColor() {
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+
+    }
+    return color;
+  }
+  
+
+
+
+  let stapleList = []
 
   useEffect(() => {
     async function teamVacationData() {
       const response = await fetch("http://localhost:8080/vacation/empsonvacperweek");
       const teams = await response.json();
       setTeamsData(teams);
-      let jsonString="";
+      let jsonString = "";
       let finalList = []
 
       if (team !== null) {
@@ -72,30 +83,30 @@ function StapleChart(props) {
         }
 
       } else {
-      
+
         for (let week = 0; week < weeks.length; week++) {
-          myList.push([])
-         
-          for (let team = 0; team < teamNameList.length; team++){
-            jsonString += '"'+teamNameList[team]+'"'+':'+teamsData[week][team]+', '
+          stapleList.push([])
+
+          for (let team = 0; team < teamNameList.length; team++) {
+            jsonString += '"' + teamNameList[team] + '"' + ':' + teamsData[week][team] + ', '
           }
-          myList[week].push(jsonString)
+          stapleList[week].push(jsonString)
           jsonString = "";
           finalStapleData.push([
-            '"name"'+':' + (weeks[week].week_number) + ', ' +
-            '"yAxis"'+':' + biggestNumber+ ', ', 
+            '"name"' + ':' + (weeks[week].week_number) + ', ' +
+            '"yAxis"' + ':' + biggestNumber + ', ',
           ])
 
-       let word = myList[week];
-       let word2 =finalStapleData[week];
-      
-       let word3 = "{" + word2 + word + "}";
-       let word4 = (word3.slice(0, -3)+ '}');
-       let myJson = JSON.parse(word4)
+          let word = stapleList[week];
+          let word2 = finalStapleData[week];
 
-       finalList.push(myJson);
+          let word3 = "{" + word2 + word + "}";
+          let word4 = (word3.slice(0, -3) + '}');
+          let myJson = JSON.parse(word4)
 
-       setStapleData(finalList)
+          finalList.push(myJson);
+
+          setStapleData(finalList)
         }
       }
     }
@@ -103,6 +114,7 @@ function StapleChart(props) {
   }, [team, biggestNumber]);
 
   let currentNumber = 0;
+  let count = 0;
 
   //Setting height for y-axis of barchart based on "biggest" vacation week
   for (let i = 0; i < teamsData.length; i++) {
@@ -131,8 +143,9 @@ function StapleChart(props) {
           <YAxis dataKey="yAxis" />
           <Tooltip />
           <Legend />
-          {teamName.map(teamName=>(
-            <Bar dataKey={teamName.team_name} stackId="a" fill={getRandomColor()} />
+          {teamName.map(teamName => (
+            count++,
+            <Bar dataKey={teamName.team_name} stackId="a" fill={listOfColors[count]} />
           ))}
         </BarChart>
       </ResponsiveContainer>

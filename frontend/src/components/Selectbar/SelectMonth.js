@@ -13,14 +13,17 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 const allMonths = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 
 const SelectMonth = ({ onChange }) => {
-    const [count, setCount] = useState(null);
-    const [month, setMonth] = useState('');
+    
+    const [month, setMonth] = useState(null);
     const [week, setWeek] = useState('');
     const [weekNr, setWeekNr] = useState([]); 
     const [checked1, setChecked1] = React.useState(false);
     const [checked2, setChecked2] = React.useState(false);
     const [checked3, setChecked3] = React.useState(false);
-    const weekNrOnlyArr = [];
+    const date = new Date();
+    const currentMonth = date.getMonth() +1
+    const [count, setCount] = useState(currentMonth);
+   
   
     useEffect(() => {
         function triggerOnChange() {
@@ -38,7 +41,7 @@ const SelectMonth = ({ onChange }) => {
                 setMonth(null);
                 if (count == weekNr.slice(-1)[0].week_number+1) {
                     setCount(weekNr[0].week_number)
-                }else if (count > 52){
+                }else if (count === 53){
                     setCount(1)
                 }else if (count == weekNr[0].week_number-1){
                     setCount(weekNr.slice(-1)[0].week_number+1)
@@ -52,7 +55,6 @@ const SelectMonth = ({ onChange }) => {
         triggerOnChange();
     }, [count])
     
-   
    
     const handleClickPositive = () => {
         setCount(count + 1);
@@ -77,9 +79,7 @@ const SelectMonth = ({ onChange }) => {
         setChecked2(event.target.checked2)
         setChecked1(false)
     }
-    const toggleCheckBox3 = () => {
-        setCount(null)
-    }
+
     useEffect(() => {
         fetch("http://localhost:8080/weeks")
           .then(res => res.json())
@@ -102,11 +102,6 @@ const SelectMonth = ({ onChange }) => {
                         value="2"
                         id="CheckMonth"
                     >Month</Button>
-                    <Button
-                        onClick={toggleCheckBox3}
-                        value="3"
-                        id="CheckYear"
-                    >Period</Button>
                 </ButtonGroup>
             </div>
         );
@@ -123,7 +118,6 @@ const SelectMonth = ({ onChange }) => {
                         label="Month"
                         onChange={onMonthSelection}
                     >
-                       
                         <MenuItem value={null}><em>None</em></MenuItem>
                         <MenuItem value={1}>January</MenuItem>
                         <MenuItem value={2}>February</MenuItem>

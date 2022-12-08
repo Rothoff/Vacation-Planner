@@ -106,8 +106,6 @@ public class DataToDatabase {
             cal.setTime(todaysDate);
             int monthCurrentDate = cal.get(Calendar.MONTH)+1;
 
-
-
             if (cal.get(Calendar.MONTH) == 0 || cal.get(Calendar.MONTH) == 1 || cal.get(Calendar.MONTH) == 2){
                 cal.add(Calendar.YEAR, -1);
                 year = cal.get(Calendar.YEAR);
@@ -123,7 +121,6 @@ public class DataToDatabase {
             numberString = weeks.substring(weeks.indexOf(" ") + 1);
             weekNumber = Integer.parseInt(numberString);
 
-
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
             String startDateFormat = simpleDateFormat.format(startDate);
             String endDateFormat = simpleDateFormat.format(endDate);
@@ -133,8 +130,6 @@ public class DataToDatabase {
             String sqlString = "Insert INTO week (week_number,start_date, end_date) VALUES ('" + weekNumber + "'," +
                     "'" + startDateFormat + "','" + endDateFormat + "')";
             jdbcTemplate.update(sqlString);
-
-            int year = Year.now().getValue();
         }
         System.out.println("rows has been inserted into week-table");
     }

@@ -7,11 +7,12 @@ import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 const selectTeam = ({ onChange }) => {
-  const [team, setTeam] = useState('');
+  const [team, setTeam] = useState(null);
   const [allEmployees, setAllEmployees] = useState([])
   const [employeeName, setEmployeeName] = useState ('');
   const [teamName, setTeamName] = useState([]);
   const listOfEmployees = [];
+
   const handleChange = (event) => {
     setTeam(event.target.value);
     onChange(event.target.value, null)
@@ -48,6 +49,7 @@ const selectTeam = ({ onChange }) => {
       listOfEmployees.push(employee.first_name + "" + employee.last_name)
     })
   }
+  
   return (
     <div id = "teamParentDiv">
       <center>

@@ -48,11 +48,10 @@ code {
 #calendar-Chart {
   display: flex;
   justify-content: center;
-  margin-left: 10%
+  margin-left: 10%;
+  position: relative;
 }
-
 /*--------*/
-
 #ymw {
   display: flex;
   margin-top: 4%;
