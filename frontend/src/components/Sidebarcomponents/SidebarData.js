@@ -20,17 +20,4 @@ export const SidebarData = [
     iconOpened: <RiIcons.RiArrowUpSFill />,
 
   },
-  {
-    title: 'Sprints',
-    path: '/sprintPlanner',
-    icon: <IoIcons.IoMdPeople />,
-    iconClosed: <RiIcons.RiArrowDownSFill />,
-    iconOpened: <RiIcons.RiArrowUpSFill />,
-    
-  },
-  {
-    title: 'Support',
-    path: '/support',
-    icon: <IoIcons.IoMdHelpCircle />
-  }
 ];

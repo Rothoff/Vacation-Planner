@@ -64,7 +64,6 @@ const EmployeesOnVacation = (props) => {
   let filterResults = [];
   let employeesArray = []
 
-
   useEffect(() => {
     fetch("http://localhost:8080/vacation/all")
       .then(res => res.json())
@@ -174,14 +173,14 @@ const EmployeesOnVacation = (props) => {
           }
 
           if (singleDate) {
-            const monday2 = new Date(emps.week.start_date)
-            const sunday2 = new Date(emps.week.start_date)
+            let monday2 = new Date(emps.week.start_date)
+            let sunday2 = new Date(emps.week.start_date)
             monday2.setDate(singleDate) //first date = user input
-            sunday2.setDate(monday2.getDate())
+            sunday2.setDate(monday.getDate())
             text = "vac";
 
             if (weekId === emps.week.week_number && month === null) {
-              collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, sunday2])
+              collection.push([emps.employee.first_name + emps.employee.last_name, text, monday2, sunday2])
 
             } else if (month === monday.getMonth() + 1 && weekId == null) {
 
@@ -193,12 +192,12 @@ const EmployeesOnVacation = (props) => {
                   }
                 }
                 var lastDay = new Date(date.getFullYear(), month, 1);
-                collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, lastDay])
+                collection.push([emps.employee.first_name + emps.employee.last_name, text, monday2, lastDay])
               } else {
-                collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, sunday2])
+                collection.push([emps.employee.first_name + emps.employee.last_name, text, monday2, sunday2])
               }
             } else if (weekId === null && month === null) {
-              collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday2, sunday2])
+              collection.push([emps.employee.first_name + emps.employee.last_name, text, monday2, sunday2])
             }
           }
           const index = textArray.indexOf(singleDate);
@@ -235,9 +234,9 @@ const EmployeesOnVacation = (props) => {
         text = "vac";
       }
 
-      if (sunday.getDate() > monday.getDate() && sunday.getFullYear() > monday.getFullYear())  {
+      if (sunday.getDate() > monday.getDate() && sunday.getFullYear() > monday.getFullYear()) {
         sunday.setFullYear(monday.getFullYear());
-      }else if(sunday.getDate() === monday.getDate()){
+      } else if (sunday.getDate() === monday.getDate()) {
         sunday.setFullYear(monday.getFullYear());
       }
 
@@ -248,19 +247,19 @@ const EmployeesOnVacation = (props) => {
         if (diffDays === 6) {
           sunday.setDate(sunday.getDate() - 1)
         }
-        collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
+        collection.push([emps.employee.first_name + emps.employee.last_name, text, monday, sunday])
 
       } else if (month === monday.getMonth() + 1 && weekId == null) {
-        if (sunday.getMonth() === month+1) {
+        if (sunday.getMonth() === month + 1) {
           const date = new Date();
           if (date.getMonth() === 11 || date.getMonth() === 10 || date.getMonth() === 9) {
             if (month === 1) {
               date.setFullYear(date.getFullYear() + 1)
             }
           }
-          collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, lastDay])
+          collection.push([emps.employee.first_name + emps.employee.last_name, text, monday, lastDay])
         } else {
-          collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
+          collection.push([emps.employee.first_name + emps.employee.last_name, text, monday, sunday])
         }
 
       } else if (month === sunday.getMonth() + 1 && weekId === null) {
@@ -275,48 +274,44 @@ const EmployeesOnVacation = (props) => {
             }
             var firstDay = new Date(date.getFullYear(), month - 1, 1)
             sunday.setDate(sunday.getDate() + 1)
-            collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, firstDay, sunday])
+            collection.push([emps.employee.first_name + emps.employee.last_name, text, firstDay, sunday])
           }
         } else {
-          collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
+          collection.push([emps.employee.first_name + emps.employee.last_name, text, monday, sunday])
         }
 
-      } else if (weekId === null && month === null) {
-        const diffTime = Math.abs(sunday - monday);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays === 6) {
-          sunday.setDate(sunday.getDate() + 1)
-
-        }
-        collection.push([emps.employee.first_name + " " + emps.employee.last_name, text, monday, sunday])
       }
     }
     )
     //array with all employees in {team}
-    allEmployeesResult.map(emp => {
-      empsNamesArr.push(emp.first_name + " " + emp.last_name);
-    })
+    if (employeeName === '' || employeeName === null) {
+      allEmployeesResult.map(emp => {
+        empsNamesArr.push(emp.first_name + emp.last_name);
+      })
+    } else {
+      empsNamesArr.push(employeeName);
+    }
 
     //mapping collection and adding the names for specific week/month to a new array
     collection.map(coll => {
       onVacationArr.push(coll[0]);
     })
   }
-  
+
   //--------------DATA FOR PIE CHART-----------------
   let daysDiff = 0;
-  
+
   useEffect(() => {
     collection.map(coll => {
       let startDate = new Date(coll[2])
-      let endDate = new Date (coll[3])
+      let endDate = new Date(coll[3])
 
-      endDate.setDate(endDate.getDate()+1)
+      endDate.setDate(endDate.getDate() + 1)
 
       let diffTime = Math.abs(endDate - startDate);
       let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-     
-        daysDiff += diff
+
+      daysDiff += diff
     })
     setVacDays(daysDiff)
     onChange(daysDiff)
@@ -324,14 +319,25 @@ const EmployeesOnVacation = (props) => {
   }, [collection, month]);
 
   //----------------PIE CHART-------------------
-  var getDaysInMonth = function (month, year) {
+
+  let year = todaysDate.getFullYear();
+
+  if (todaysDate.getMonth() === 11 || todaysDate.getMonth() === 10 || todaysDate.getMonth() === 9) {
+    if (month === 1 || weekId === 1 || weekId === 2 || weekId === 3 || weekId === 4) {
+      year = todaysDate.getFullYear() + 1
+    }
+  }
+
+
+  let getDaysInMonth = function (month, year) {
     return new Date(year, month, 0).getDate();
   };
 
   const data = [];
   let keyNr = 0;
-  let daysInMonth = getDaysInMonth(month, 2022)
+  let daysInMonth = getDaysInMonth(month, year)
   let dateArr = []
+
 
   for (let i = 0; i < daysInMonth; i++) {
     dateArr[i] = ""
@@ -364,28 +370,76 @@ const EmployeesOnVacation = (props) => {
     keyNr++;
   })
 
-  
+
+  let columnStart;
+  let columnEnd;
+  let diff;
+  let sundayMonth;
+
+  if (weekId != null && weekId != '') {
+    weekData.map(wd=>{
+      if (weekId===wd.week_number){
+       let start = new Date(wd.start_date)
+       let end = new Date(wd.end_date)
+       columnStart = start.getDate()-1
+       columnEnd = end.getDate()
+      }
+    })
+    
+    if (columnEnd <= 6) {
+      sundayMonth = getSundayFromWeekNum(weekId, year).getMonth();
+      if (sundayMonth === 0) {
+        sundayMonth = 12;
+      }
+      diff = 7 - columnEnd;
+      columnStart = getDaysInMonth((sundayMonth), year) - diff
+      columnEnd = columnStart + 7;
+    } else {
+      sundayMonth = (getSundayFromWeekNum(weekId, year).getMonth() + 1)
+    }
+  } else {
+    columnEnd = daysInMonth
+    columnStart = 0;
+  }
+
+
   const columns = [
     {
-      title: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0' + 'Name' + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0',
+      title: '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0'
+        + 'Name'
+        + '\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0',
       dataIndex: 'name',
       fixed: true,
       width: 300,
     },
   ]
 
-  for (let i = 0; i < daysInMonth; i++) {
+  let day = columnStart;
+  for (let i = columnStart; i < columnEnd; i++) {
     let color = "black"
     let tagColor = "black"
-    let date = new Date('2022-' + month + '-' + (i + 1))
-    const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    let monthNr = month;
+    let sunday = new Date(getSundayFromWeekNum(weekId, year));
+    let monday = new Date(sunday);
+    monday.setDate(monday.getDate() - 7)
+    day++
 
-    if (todaysDate.getMonth() === 11 || todaysDate.getMonth() === 10 || todaysDate.getMonth() === 9) {
-      if (month === 1) {
-        date.setFullYear(date.getFullYear() + 1)
+    if (weekId != null && weekId != '') {
+      monthNr = monday.getMonth() + 1;
+      if (sunday.getDate() != monday.getDate()) {
+        if (day > getDaysInMonth(sundayMonth, year)) {
+          day = 1;
+          monthNr = sunday.getMonth() + 1;
+        }
       }
     }
-    let content = date.getDate() + "/" + month + "-" + date.getFullYear();
+
+    let date = new Date(year + '-' + monthNr + '-' + (day))
+
+    const dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+
+    let content = date.getDate() + "/" + monthNr;
 
     if (isHoliday(date)) {
       color = "orange";
@@ -398,9 +452,9 @@ const EmployeesOnVacation = (props) => {
       content = content + " (TODAY)"
     } else {
       content = content + " (" + dayOfWeek[date.getDay()] + ")"
-      if (date.getDay() === 6 || date.getDay() === 0) {
-        color = "red";
-      }
+    }
+    if (date.getDay() === 6 || date.getDay() === 0) {
+      color = "red";
     }
 
     function vacTag(text) {
@@ -419,7 +473,7 @@ const EmployeesOnVacation = (props) => {
 
     columns.push({
       title: <Popover content={content} trigger="hover"><Tag color={color}>
-        {[i + 1]}
+        {[day]}
       </Tag> </Popover>,
       render: (_, text) => (
         <span>
@@ -429,14 +483,13 @@ const EmployeesOnVacation = (props) => {
     })
   }
 
+
   return (
     <div id="parentChart">
       <div id="calendar-Chart"><Table id='vacTable' columns={columns} dataSource={data} />
       </div>
-
     </div>
   );
 
 }
-
 export default EmployeesOnVacation;

@@ -48,11 +48,10 @@ code {
 #calendar-Chart {
   display: flex;
   justify-content: center;
-  margin-left: 10%
+  margin-left: 10%;
+  position: relative;
 }
-
 /*--------*/
-
 #ymw {
   display: flex;
   margin-top: 4%;
@@ -234,17 +233,6 @@ abbr[title] {
   align-items: center;
 }
 
-<<<<<<< HEAD
-.navTitle{
-  display: flex;
-  justify-content: center;
-  color: white;
-  background-color: #014572;
-  margin-top: 0;
-  margin-bottom: 0;
- font-size: 40px;
-}
-=======
 #vacTable{
   overflow-x: scroll;
   height: auto;
@@ -260,4 +248,6 @@ abbr[title] {
 #week-text{
   font-size: xx-small;
 }
->>>>>>> calendar
+hide{
+  display: none;
+}

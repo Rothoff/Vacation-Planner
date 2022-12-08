@@ -28,8 +28,6 @@ function pieChart(props) {
         return new Date(year, month, 0).getDate();
     }
 
-
-
     if (week !== null && month === null) {
         var totalDaysForTeam = amountInTeam * Number(5);
     } else if (month !== null && week === null) {
