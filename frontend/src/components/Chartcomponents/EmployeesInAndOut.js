@@ -62,13 +62,8 @@ function createData(name, inOrOut, date) {
   return { name, inOrOut, date };
 }
 export default function CustomizedTables(props) {
-<<<<<<< HEAD
-  const { team } = props;
-  const { week } = props;
-=======
   var year = new Date().getFullYear();
   const { team, week, vacDaysEmployee } = props;
->>>>>>> smallFix
   let backFromVacation = <WestIcon sx={{ color: 'blue' }} />
   let goingOnVacation = <EastIcon sx={{ color: 'red' }} />
   const [employeesOnVacation, setEmployeesOnVacation] = useState([]);
@@ -279,11 +274,7 @@ export default function CustomizedTables(props) {
     var dateBack = 0;
     if (tex.length > 2)
       for (let index = 0; index < (tex.length - 1); index++) {
-<<<<<<< HEAD
-        if((parseInt(tex[index]) + 1) === parseInt(tex[index + 1])){
-=======
         if ((parseInt(tex[index]) + 1) == parseInt(tex[index + 1])) {
->>>>>>> smallFix
           dateGo = tex[index];
           dateBack = tex[index + 1];
           vacationForMoreThanOneDay(week, dateGo, dateBack, name, startDate, endDate)
@@ -350,25 +341,15 @@ export default function CustomizedTables(props) {
   })
 
   employeesOnVacationNextWeek(team, week).map(nw => {
-<<<<<<< HEAD
-    console.log(condition(nw))
-    if (!(employeesOnVacationNextWeek(team, week).length === 0) && (condition(nw) === false)) {
-=======
     if (!(employeesOnVacationNextWeek(team, week).length === 0) && (condition(nw) == false)) {
->>>>>>> smallFix
       var weekNumberThisWeek = week;
       var weekNumberNextWeek = 0;
       var year = 0;
 
       if (weekNumberThisWeek === 52) {
         weekNumberNextWeek = 1;
-<<<<<<< HEAD
-      } 
-      if(weekNumberThisWeek < weekNumberNextWeek || weekNumberThisWeek <= 3){
-=======
       }
-      if (weekNumberThisWeek < weekNumberNextWeek) {
->>>>>>> smallFix
+      if (weekNumberThisWeek < weekNumberNextWeek || weekNumberThisWeek <= 3) {
         year = new Date().getFullYear() + 1;
       } else {
         year = new Date().getFullYear();
