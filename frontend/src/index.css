@@ -45,12 +45,7 @@ code {
 
 }
 
-#calendar-Chart {
-  display: flex;
-  justify-content: center;
-  margin-left: 10%;
-  position: relative;
-}
+
 /*--------*/
 #ymw {
   display: flex;
@@ -232,6 +227,7 @@ abbr[title] {
   flex-direction: column;
   align-items: center;
 }
+/*--------------*/
 
 .navTitle{
   display: flex;
@@ -242,13 +238,7 @@ abbr[title] {
   margin-bottom: 0;
  font-size: 40px;
 }
-#vacTable{
-  overflow-x: scroll;
-  height: auto;
-  max-width:200vh;
-  table-layout: fixed;
-  width: 90%
-}
+
 #vacTableDiv{
   display: flex;
   justify-content: center;
@@ -256,4 +246,22 @@ abbr[title] {
 }
 #week-text{
   font-size: xx-small;
+}
+
+#parentChart{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#calendar-Chart {
+  display: flex;
+  justify-content: center;
+  width: 90%;
+  
+}
+#vacTable{
+  overflow-x: scroll;
+  height: auto;
+  max-width:200vh;
+  table-layout: fixed; 
 }

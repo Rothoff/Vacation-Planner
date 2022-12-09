@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Table, Tag, Popover } from 'antd';
+import { RecordVoiceOverSharp } from '@mui/icons-material';
 //imports from fetch file
 
 export const getSundayFromWeekNum = (weekNum, year) => {
@@ -291,34 +292,46 @@ const EmployeesOnVacation = (props) => {
     } else {
       empsNamesArr.push(employeeName);
     }
-
-    //mapping collection and adding the names for specific week/month to a new array
-    collection.map(coll => {
+  }
+     //mapping collection and adding the names for specific week/month to a new array
+     collection.map(coll => {
       onVacationArr.push(coll[0]);
     })
-  }
 
-  //--------------DATA FOR PIE CHART-----------------
+  let vacDaysEmployee = [];
+
+  for (let i = 0; i < empsNamesArr.length; i++) {
+    vacDaysEmployee.push({name: empsNamesArr[i], totalVacDays: 0});
+  }
+  //--------------data FOR PIE CHART and IN OR OUT-----------------
   let daysDiff = 0;
 
   useEffect(() => {
-    collection.map(coll => {
-      let startDate = new Date(coll[2])
-      let endDate = new Date(coll[3])
+    if (employeeName === null || employeeName === '') {
+      collection.map(coll => {
+        let startDate = new Date(coll[2])
+        let endDate = new Date(coll[3])
+        endDate.setDate(endDate.getDate() + 1)
+        let diffTime = Math.abs(endDate - startDate);
+        let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        daysDiff += diff
+        for (let i = 0; i < vacDaysEmployee.length; i++){
+          if(coll[0].includes(vacDaysEmployee[i].name)){
+            vacDaysEmployee[i].totalVacDays+=diff;
+          }
+        }
+      })
 
-      endDate.setDate(endDate.getDate() + 1)
+      console.log(vacDaysEmployee)
+      vacDaysEmployee.sort(function(a, b){return b.totalVacDays - a.totalVacDays});
+    
+      console.log("AFTER", vacDaysEmployee)
 
-      let diffTime = Math.abs(endDate - startDate);
-      let diff = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      daysDiff += diff
-    })
-    setVacDays(daysDiff)
-    onChange(daysDiff)
-
-  }, [collection, month]);
-
-  //----------------PIE CHART-------------------
+      setVacDays(daysDiff)
+      onChange(daysDiff, vacDaysEmployee)
+    }
+  }, [month, results, weekId]);
+  //-------------------------------------
 
   let year = todaysDate.getFullYear();
 
@@ -377,15 +390,15 @@ const EmployeesOnVacation = (props) => {
   let sundayMonth;
 
   if (weekId != null && weekId != '') {
-    weekData.map(wd=>{
-      if (weekId===wd.week_number){
-       let start = new Date(wd.start_date)
-       let end = new Date(wd.end_date)
-       columnStart = start.getDate()-1
-       columnEnd = end.getDate()
+    weekData.map(wd => {
+      if (weekId === wd.week_number) {
+        let start = new Date(wd.start_date)
+        let end = new Date(wd.end_date)
+        columnStart = start.getDate() - 1
+        columnEnd = end.getDate()
       }
     })
-    
+
     if (columnEnd <= 6) {
       sundayMonth = getSundayFromWeekNum(weekId, year).getMonth();
       if (sundayMonth === 0) {
@@ -486,7 +499,7 @@ const EmployeesOnVacation = (props) => {
 
   return (
     <div id="parentChart">
-      <div id="calendar-Chart"><Table id='vacTable' columns={columns} dataSource={data} />
+      <div id="calendar-Chart"><Table id='vacTable' columns={columns} dataSource={data} pagination={{ pageSize: 25 }} />
       </div>
     </div>
   );

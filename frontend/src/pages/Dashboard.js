@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [weekId, setWeekId] = useState(null);
   const [month, setMonth] = useState(null);
   const [vacDays, setVacDays] = useState(null);
+  const [vacDaysEmployee, setVacDaysEmployee] = useState(null);
 
   const onChangeSelection = (teamId, employeeName) => {
     setTeam(teamId)
@@ -21,11 +22,12 @@ const Dashboard = () => {
   const onChangeSelection2 = (weekId, monthId) => {
     setWeekId(weekId)
     setMonth(monthId)
-  }
-  const onChangeSelection3 = (vacDays) => {
-    setVacDays(vacDays)
-  }
 
+  }
+  const onChangeSelection3 = (vacDays, vacDaysEmployee ) => {
+    setVacDays(vacDays)
+    setVacDaysEmployee(vacDaysEmployee)
+  }
 
   return (
     <div className='dashboard'>
@@ -41,7 +43,7 @@ const Dashboard = () => {
       </div>
       <div id="bottomDiv">
         <div id="pieChartDiv"> <PieChart week={weekId} team={team} month={month} vacDays={vacDays} /></div>
-        <div id="inOutDiv"><EmployeesInAndOut week={weekId} team={team} /></div>
+        <div id="inOutDiv"><EmployeesInAndOut week={weekId} team={team} vacDaysEmployee = {vacDaysEmployee} /></div>
       </div>
     </div>
 

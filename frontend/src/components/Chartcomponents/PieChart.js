@@ -15,7 +15,9 @@ function pieChart(props) {
         }
         teamData();
     }, []);
+
     const amountInTeam = Number(teamsAmountData[team - 1]);
+    
     useEffect(() => {
         fetch("http://localhost:8080/vacation/all")
             .then(res => res.json())
@@ -24,6 +26,7 @@ function pieChart(props) {
             }
             )
     }, [])
+
     function daysInMonth(month, year) {
         return new Date(year, month, 0).getDate();
     }
@@ -33,7 +36,6 @@ function pieChart(props) {
     } else if (month !== null && week === null) {
         var totalDaysOfMonth = daysInMonth(month, 2022)
         var totalDaysForTeam = amountInTeam * totalDaysOfMonth
-
 
         function isWeekday(year, month, day) {
             var day = new Date(year, month, day).getDay();
@@ -49,7 +51,6 @@ function pieChart(props) {
             return weekdays;
         }
         totalDaysForTeam = amountInTeam * getWeekdaysInMonth((month - 1), 2022)
-
     }
 
     var workDays = totalDaysForTeam - vacDays;

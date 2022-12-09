@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 const selectTeam = ({ onChange }) => {
-  const [team, setTeam] = useState(null);
+  const [team, setTeam] = useState(0);
   const [allEmployees, setAllEmployees] = useState([])
   const [employeeName, setEmployeeName] = useState ('');
   const [teamName, setTeamName] = useState([]);
@@ -38,7 +38,7 @@ const selectTeam = ({ onChange }) => {
       }
       )
   }, [])
-  if (team !== null) {
+  if (team !== null && team !== 0) {
     allEmployees.map(employee => {
       if (employee.team.id === team) {
         listOfEmployees.push(employee.first_name + "" + employee.last_name)
